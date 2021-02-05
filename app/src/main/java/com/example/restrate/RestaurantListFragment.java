@@ -1,27 +1,155 @@
 package com.example.restrate;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.restrate.model.Model;
+import com.example.restrate.model.Restaurant;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class RestaurantListFragment extends Fragment {
-
+    List<Restaurant> data = new LinkedList<Restaurant>();
+    ProgressBar pb;
+    FloatingActionButton addRestaurantBtn;
+    RecyclerView restList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
-        FloatingActionButton addRestaurantBtn = view.findViewById(R.id.restlist_add_btn);
+        pb = view.findViewById(R.id.restlist_progress_bar);
+        addRestaurantBtn = view.findViewById(R.id.restlist_add_btn);
+        restList = view.findViewById(R.id.restlist_recycler_view);
 
         addRestaurantBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_restaurantList_to_addRestaurant));
 
+        pb.setVisibility(View.INVISIBLE);
+        restList.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        restList.setLayoutManager(layoutManager);
+
+        MyAdapter adapter = new MyAdapter();
+        restList.setAdapter(adapter);
+
+        adapter.setOnClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Log.d("TAG", "row was clicked: " + position);
+            }
+        });
+
+        reloadData();
         return view;
+    }
+
+    void reloadData() {
+        pb.setVisibility(View.VISIBLE);
+        addRestaurantBtn.setEnabled(false);
+
+        Model.instance.getAllRestaurants(new Model.GenericRestaurantListenerWithParam<List<Restaurant>>() {
+            @Override
+            public void onComplete(List<Restaurant> importedData) {
+                data = importedData;
+                for (Restaurant rst : data) {
+                    Log.d("TAG", "rest id: " + rst.getId());
+                }
+                pb.setVisibility(View.INVISIBLE);
+                addRestaurantBtn.setEnabled(true);
+            }
+        });
+    }
+
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView restName;
+        TextView restAddress;
+        RatingBar restRating;
+        TextView restCostMeter;
+        int position;
+
+        public MyViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+            super(itemView);
+            restName = itemView.findViewById(R.id.restlistrow_name);
+            restAddress = itemView.findViewById(R.id.restlistrow_address);
+            restRating = itemView.findViewById(R.id.restlistrow_rating);
+            restCostMeter = itemView.findViewById(R.id.restlistrow_cost_meter);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
+        }
+
+        private String costMeterTextConverter(int costMeter) {
+            String costMeterStringified = "";
+
+            for (int i = 0; i < costMeter; i++) {
+                costMeterStringified.concat("$");
+            }
+
+            return costMeterStringified;
+        }
+
+        private void bindData(Restaurant restaurant, int position) {
+            this.position = position;
+            restName.setText(restaurant.getId());
+            restAddress.setText(restaurant.getAddress());
+            restRating.setRating(restaurant.getRate());
+            restCostMeter.setText(costMeterTextConverter(restaurant.getCostMeter()));
+        }
+    }
+
+    interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+        private OnItemClickListener listener;
+
+        void setOnClickListener(OnItemClickListener listener) {
+            this.listener = listener;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, null);
+            MyViewHolder holder = new MyViewHolder(view, listener);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            Restaurant restaurant = data.get(position);
+            holder.bindData(restaurant, position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return data.size();
+        }
     }
 }
