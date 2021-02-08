@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "443863352647",
+    "project_id": "restrate-306fa",
+    "storage_bucket": "restrate-306fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443863352647:android:a0f1a493cbc6029aeaf862",
+        "android_client_info": {
+          "package_name": "com.example.restrate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443863352647-raec5bj30k88nektn524g1akg0rcmq5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD5gwQIYEKSI__xoMsZORQDo_ftFQicpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "443863352647-raec5bj30k88nektn524g1akg0rcmq5r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/restaurantListFragment">
+
+    <fragment
+        android:id="@+id/restaurantListFragment"
+        android:name="com.example.restrate.RestaurantListFragment"
+        android:label="@string/restaurant_list"
+        tools:layout="@layout/fragment_restaurant_list">
+        <action
+            android:id="@+id/action_restaurantListFragment_to_addRestaurantFragment"
+            app:destination="@id/addRestaurantFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addRestaurantFragment"
+        android:name="com.example.restrate.AddRestaurantFragment"
+        android:label="@string/add_restaurant"
+        tools:layout="@layout/fragment_add_restaurant">
+        <action
+            android:id="@+id/action_addRestaurant_to_restaurantInfo"
+            app:destination="@id/restaurantInfoFragment"
+            app:popUpTo="@id/restaurantListFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_addRestaurantFragment_pop"
+            app:destination="@id/restaurantListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/restaurantInfoFragment"
+        android:name="com.example.restrate.RestaurantInfoFragment"
+        android:label="@string/restaurant_info"
+        tools:layout="@layout/fragment_restaurant_info" >
+        <argument
+            android:name="restaurantId"
+            app:argType="string" />
+    </fragment>
+</navigation>
