@@ -1,5 +1,7 @@
 package com.example.restrate.model;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 public class Model {
@@ -29,5 +31,9 @@ public class Model {
 
     public void deleteRestaurantById(String id, GenericRestaurantListenerWithNoParam listener) {
         modelFirebase.deleteRestaurantById(id, listener);
+    }
+
+    public void uploadImage(Bitmap imageBmp, String name, GenericRestaurantListenerWithParam<String> listener) {
+        modelFirebase.uploadImage(imageBmp, name, listener);
     }
 }
