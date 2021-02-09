@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_restaurantListFragment_to_addRestaurantFragment"
             app:destination="@id/addRestaurantFragment" />
+        <action
+            android:id="@+id/action_restaurantListFragment_to_restaurantInfoFragment"
+            app:destination="@id/restaurantInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/addRestaurantFragment"
@@ -24,9 +27,6 @@
             app:destination="@id/restaurantInfoFragment"
             app:popUpTo="@id/restaurantListFragment"
             app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_addRestaurantFragment_pop"
-            app:destination="@id/restaurantListFragment" />
     </fragment>
     <fragment
         android:id="@+id/restaurantInfoFragment"

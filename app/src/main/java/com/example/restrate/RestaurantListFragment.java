@@ -52,7 +52,9 @@ public class RestaurantListFragment extends Fragment {
         adapter.setOnClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Log.d("TAG", "row was clicked: " + position);
+                String id = data.get(position).getId();
+                RestaurantListFragmentDirections.ActionRestaurantListFragmentToRestaurantInfoFragment direction = RestaurantListFragmentDirections.actionRestaurantListFragmentToRestaurantInfoFragment(id);
+                Navigation.findNavController(view).navigate(direction);
             }
         });
 
@@ -105,19 +107,21 @@ public class RestaurantListFragment extends Fragment {
             });
         }
 
-        private String costMeterTextConverter(int costMeter) {
+        private String costMeterTextConverter(float costMeter) {
             String costMeterStringified = "";
 
             for (int i = 0; i < costMeter; i++) {
-                costMeterStringified.concat("$");
+                costMeterStringified = costMeterStringified.concat("$");
             }
 
             return costMeterStringified;
         }
 
         private void bindData(Restaurant restaurant, int position) {
+            restaurant.setRate(3);
+            restaurant.setCostMeter(2);
             this.position = position;
-            restName.setText(restaurant.getId());
+            restName.setText(restaurant.getName());
             restAddress.setText(restaurant.getAddress());
             restRating.setRating(restaurant.getRate());
             restCostMeter.setText(costMeterTextConverter(restaurant.getCostMeter()));

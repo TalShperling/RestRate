@@ -8,13 +8,5 @@
             android:id="@+id/restaurantListFragment"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/restaurant_list" />
-        <item
-            android:id="@+id/restaurantInfoFragment"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/restaurant_info" />
-        <item
-            android:id="@+id/addRestaurantFragment"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/add_restaurant" />
     </group>
 </menu>

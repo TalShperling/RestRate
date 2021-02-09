@@ -63,6 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Restaurant name"
+                    android:maxLength="14"
                     android:textSize="18sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -85,7 +86,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:hint="Description" />
+                    android:hint="Description"
+                    android:maxLength="42"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,7 +109,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Address" />
+                    android:hint="Address"
+                    android:maxLength="14"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -127,7 +130,9 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Phone number" />
+                    android:hint="Phone number"
+                    android:inputType="phone"
+                    android:maxLength="10"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -148,7 +153,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Site URL" />
+                    android:hint="Site URL"
+                    android:inputType="textUri"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
