@@ -4,6 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
+
+import java.util.HashMap;
+import java.util.Map;
+
 @Entity
 public class Restaurant {
     @PrimaryKey
@@ -15,8 +21,40 @@ public class Restaurant {
     private String phoneNumber;
     private String siteLink;
     private String imageURL;
-    private float rate;
-    private int costMeter;
+    private Double rate;
+    private Long costMeter;
+    private Long lastUpdated;
+    private Boolean isDeleted = false;
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("id", id);
+        result.put("name", name);
+        result.put("description", description);
+        result.put("address", address);
+        result.put("phoneNumber", phoneNumber);
+        result.put("siteLink", siteLink);
+        result.put("imageURL", imageURL);
+        result.put("rate", rate);
+        result.put("costMeter", costMeter);
+        result.put("lastUpdated", FieldValue.serverTimestamp());
+        result.put("isDeleted", isDeleted);
+        return result;
+    }
+
+    public void fromMap(Map<String, Object> map) {
+        id = (String) map.get("id");
+        name = (String) map.get("name");
+        description = (String) map.get("description");
+        address = (String) map.get("address");
+        phoneNumber = (String) map.get("phoneNumber");
+        siteLink = (String) map.get("siteLink");
+        imageURL = (String) map.get("imageURL");
+        costMeter = (Long) map.get("costMeter");
+        rate = (Double) map.get("rate");
+        lastUpdated = ((Timestamp) map.get("lastUpdated")).getSeconds();
+        isDeleted = (Boolean) map.get("isDeleted");
+    }
 
     @NonNull
     public String getId() {
@@ -75,20 +113,35 @@ public class Restaurant {
         this.imageURL = imageURL;
     }
 
-    public float getRate() {
+    public Double getRate() {
         return rate;
     }
 
-    public void setRate(float rate) {
+    public void setRate(Double rate) {
         this.rate = rate;
     }
 
-    public int getCostMeter() {
+    public Long getCostMeter() {
         return costMeter;
     }
 
-    public void setCostMeter(int costMeter) {
+    public void setCostMeter(Long costMeter) {
         this.costMeter = costMeter;
     }
 
+    public Long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
 }

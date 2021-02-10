@@ -2,31 +2,16 @@ package com.example.restrate.model;
 
 import android.os.AsyncTask;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
 public class ModelSQL {
-    public void getAllRestaurants(GenericRestaurantListenerWithParam<List<Restaurant>> listener) {
-        class MyAsyncTask extends AsyncTask {
-            List<Restaurant> restList;
-
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                restList = AppLocalDb.db.restaurantDAO().getAll();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                listener.onComplete(restList);
-            }
-        }
-
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
+    public LiveData<List<Restaurant>> getAllRestaurants() {
+        return AppLocalDb.db.restaurantDAO().getAll();
     }
 
-    public void addRestaurant(Restaurant restToAdd, GenericRestaurantListenerWithNoParam listener) {
+    public void upsertRestaurant(Restaurant restToAdd, GenericRestaurantListenerWithNoParam listener) {
         class MyAsyncTask extends AsyncTask {
 
             @Override
@@ -38,27 +23,9 @@ public class ModelSQL {
             @Override
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
-                listener.onComplete();
-            }
-        }
-
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
-    }
-
-    public void updateRestaurant(Restaurant restaurant, GenericRestaurantListenerWithNoParam listener) {
-        class MyAsyncTask extends AsyncTask {
-
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                AppLocalDb.db.restaurantDAO().update(restaurant);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                listener.onComplete();
+                if (listener != null) {
+                    listener.onComplete();
+                }
             }
         }
 
@@ -78,7 +45,9 @@ public class ModelSQL {
             @Override
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
-                listener.onComplete();
+                if (listener != null) {
+                    listener.onComplete();
+                }
             }
         }
 
