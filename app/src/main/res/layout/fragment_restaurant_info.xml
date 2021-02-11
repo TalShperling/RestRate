@@ -13,7 +13,6 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="5dp"
-        android:text="TextView"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/restinfo_description"
@@ -25,7 +24,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text=" gsagasgag gsa gsagas gasg sagasggsag gsag sgag asgsga"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/restinfo_image"
         app:layout_constraintEnd_toStartOf="@+id/restinfo_image"
@@ -34,19 +32,18 @@
 
     <ImageView
         android:id="@+id/restinfo_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/restinfo_name"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@drawable/restaurant" />
 
     <TextView
         android:id="@+id/restinfo_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="TextView"
         app:layout_constraintEnd_toStartOf="@+id/restinfo_image"
         app:layout_constraintStart_toStartOf="@+id/restinfo_name"
         app:layout_constraintTop_toBottomOf="@+id/restinfo_description" />
@@ -55,7 +52,6 @@
         android:id="@+id/restinfo_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/restinfo_image"
         app:layout_constraintTop_toTopOf="@+id/restinfo_siteLink" />
 
@@ -65,7 +61,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
-        android:text="TextView"
         app:layout_constraintEnd_toStartOf="@+id/restinfo_phone"
         app:layout_constraintStart_toStartOf="@+id/restinfo_name"
         app:layout_constraintTop_toBottomOf="@+id/restinfo_address" />

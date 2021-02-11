@@ -1,5 +1,7 @@
 package com.example.restrate;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.restrate.model.GenericRestaurantListenerWithParam;
 import com.example.restrate.model.Model;
@@ -18,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class RestaurantInfoFragment extends Fragment {
+    View view;
     TextView restaurantName;
     TextView restaurantDescription;
     TextView restaurantAddress;
@@ -31,7 +35,7 @@ public class RestaurantInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_restaurant_info, container, false);
+        view = inflater.inflate(R.layout.fragment_restaurant_info, container, false);
 
         restaurantName = view.findViewById(R.id.restinfo_name);
         restaurantDescription = view.findViewById(R.id.restinfo_description);
@@ -48,13 +52,33 @@ public class RestaurantInfoFragment extends Fragment {
         Model.instance.getRestaurantById(restaurantId, new GenericRestaurantListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant data) {
-                restaurant = data;
-                bindData(restaurant);
                 pb.setVisibility(View.INVISIBLE);
+                if (data != null) {
+                    restaurant = data;
+                    bindData(restaurant);
+                } else {
+                    cancelLoad();
+                }
             }
         });
 
         return view;
+    }
+
+    private void cancelLoad() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Operation failed");
+        builder.setMessage("Could not retrieve the data from the server, please try again later");
+
+        builder.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                Navigation.findNavController(view).popBackStack();
+            }
+        });
+
+        builder.show();
     }
 
     private void bindData(Restaurant restaurant) {
@@ -66,7 +90,7 @@ public class RestaurantInfoFragment extends Fragment {
     }
 
     private void loadImage() {
-        if(restaurant.getImageURL() != null) {
+        if (restaurant.getImageURL() != null) {
             Picasso.get().load(restaurant.getImageURL()).placeholder(R.drawable.restaurant).into(restaurantImage);
         }
     }

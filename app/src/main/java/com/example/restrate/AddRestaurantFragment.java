@@ -1,6 +1,7 @@
 package com.example.restrate;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,8 @@ import com.example.restrate.model.GenericRestaurantListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.io.File;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -134,8 +138,6 @@ public class AddRestaurantFragment extends Fragment {
         return isFormValid;
     }
 
-    static int id = 0;
-
     private void saveRestaurant() {
         restaurant.setName(nameET.getEditText().getText().toString());
         restaurant.setDescription(descriptionET.getEditText().getText().toString());
@@ -146,13 +148,10 @@ public class AddRestaurantFragment extends Fragment {
         if (validateNewRestaurantForm()) {
             pb.setVisibility(View.VISIBLE);
 
-            restaurant.setId(String.valueOf(id));
-            id++;
-
             BitmapDrawable drawable = (BitmapDrawable) avatarImageView.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
 
-            Model.instance.uploadImage(bitmap, restaurant.getId(), new GenericRestaurantListenerWithParam<String>() {
+            Model.instance.uploadImage(bitmap, new GenericRestaurantListenerWithParam<String>() {
                 @Override
                 public void onComplete(String url) {
                     if (url == null) {
@@ -171,10 +170,10 @@ public class AddRestaurantFragment extends Fragment {
                         builder.show();
                     } else {
                         restaurant.setImageURL(url);
-                        Model.instance.addRestaurant(restaurant, new GenericRestaurantListenerWithNoParam() {
+                        Model.instance.upsertRestaurant(restaurant, new GenericRestaurantListenerWithParam<Restaurant>() {
                             @Override
-                            public void onComplete() {
-                                AddRestaurantFragmentDirections.ActionAddRestaurantToRestaurantInfo action = AddRestaurantFragmentDirections.actionAddRestaurantToRestaurantInfo(restaurant.getId());
+                            public void onComplete(Restaurant rest) {
+                                AddRestaurantFragmentDirections.ActionAddRestaurantToRestaurantInfo action = AddRestaurantFragmentDirections.actionAddRestaurantToRestaurantInfo(rest.getId());
                                 Navigation.findNavController(view).navigate(action);
                             }
                         });
@@ -183,6 +182,9 @@ public class AddRestaurantFragment extends Fragment {
             });
         }
     }
+
+    final int SELECT_PICTURE_FROM_CAMERA = 0;
+    final int SELECT_PICTURE_FROM_GALLERY = 1;
 
     private void editImage() {
         final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
@@ -197,11 +199,10 @@ public class AddRestaurantFragment extends Fragment {
 
                 if (options[item].equals("Take Photo")) {
                     Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, 0);
+                    startActivityForResult(takePicture, SELECT_PICTURE_FROM_CAMERA);
 
                 } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto , 1);
+                    imageChooser();
 
                 } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -211,34 +212,43 @@ public class AddRestaurantFragment extends Fragment {
         builder.show();
     }
 
+    void imageChooser() {
+
+        // create an instance of the
+        // intent of the type image
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+
+        // pass the constant to compare it
+        // with the returned requestCode
+        startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE_FROM_GALLERY);
+    }
+
+    private float convertDpToPixel(float dp, Context context){
+        return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode != RESULT_CANCELED) {
             switch (requestCode) {
-                case 0:
+                case SELECT_PICTURE_FROM_CAMERA:
                     if (resultCode == RESULT_OK && data != null) {
                         Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
                         avatarImageView.setImageBitmap(selectedImage);
                     }
 
                     break;
-                case 1:
+                case SELECT_PICTURE_FROM_GALLERY:
                     if (resultCode == RESULT_OK && data != null) {
                         Uri selectedImage =  data.getData();
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                        if (selectedImage != null) {
-                            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                                    filePathColumn, null, null, null);
-                            if (cursor != null) {
-                                cursor.moveToFirst();
-
-                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                String picturePath = cursor.getString(columnIndex);
-                                avatarImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                                cursor.close();
-                            }
+                        if (null != selectedImage) {
+                            // update the preview image in the layout
+                            avatarImageView.setImageURI(selectedImage);
+                            avatarImageView.getLayoutParams().height = (int) convertDpToPixel(200, MyApplication.context);
+                            avatarImageView.getLayoutParams().width = (int) convertDpToPixel(200, MyApplication.context);
                         }
-
                     }
                     break;
             }
