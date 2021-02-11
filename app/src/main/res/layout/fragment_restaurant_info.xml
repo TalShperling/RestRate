@@ -74,4 +74,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/restinfo_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="Back"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/restinfo_edit"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/restinfo_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#4CAF50"
+        android:text="Edit"
+        android:textSize="20sp"
+        app:backgroundTint="#4CAF50"
+        app:layout_constraintBottom_toBottomOf="@+id/restinfo_back"
+        app:layout_constraintEnd_toStartOf="@+id/restinfo_delete"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/restinfo_back" />
+
+    <Button
+        android:id="@+id/restinfo_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:textSize="20sp"
+        app:backgroundTint="#FD0000"
+        app:layout_constraintBottom_toBottomOf="@+id/restinfo_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/restinfo_edit" />
 </androidx.constraintlayout.widget.ConstraintLayout>

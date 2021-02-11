@@ -41,7 +41,7 @@ public class Model {
                 // 3. Insert the new updates to the local db
                 long lastU = 0;
                 for (Restaurant rst : data) {
-                    if(rst.getIsDeleted()) {
+                    if (rst.getIsDeleted()) {
                         modelSQL.deleteRestaurantById(rst, null);
                     } else {
                         modelSQL.upsertRestaurant(rst, null);
@@ -81,8 +81,20 @@ public class Model {
         });
     }
 
-    public void deleteRestaurantById(String id, GenericRestaurantListenerWithNoParam listener) {
-        modelFirebase.deleteRestaurantById(id, listener);
+    public void deleteRestaurant(Restaurant restaurant, GenericRestaurantListenerWithNoParam listener) {
+        modelFirebase.deleteRestaurant(restaurant, new GenericRestaurantListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                refreshAllRestaurants(new GenericRestaurantListenerWithNoParam() {
+                    @Override
+                    public void onComplete() {
+                        if (listener != null) {
+                            listener.onComplete();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void getLatestId(Restaurant restToAdd, GenericRestaurantListenerWithNoParam listener) {

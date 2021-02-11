@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,12 +14,11 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.restrate.model.GenericRestaurantListenerWithNoParam;
 import com.example.restrate.model.GenericRestaurantListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class RestaurantInfoFragment extends Fragment {
     View view;
@@ -30,6 +30,9 @@ public class RestaurantInfoFragment extends Fragment {
     ImageView restaurantImage;
     Restaurant restaurant = new Restaurant();
     ProgressBar pb;
+    Button backBtn;
+    Button editBtn;
+    Button deleteBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,9 +46,35 @@ public class RestaurantInfoFragment extends Fragment {
         restaurantPhone = view.findViewById(R.id.restinfo_phone);
         restaurantSiteLink = view.findViewById(R.id.restinfo_siteLink);
         restaurantImage = view.findViewById(R.id.restinfo_image);
+        backBtn = view.findViewById(R.id.restinfo_back);
+        editBtn = view.findViewById(R.id.restinfo_edit);
+        deleteBtn = view.findViewById(R.id.restinfo_delete);
 
         pb = view.findViewById(R.id.restinfo_pb);
         pb.setVisibility(View.VISIBLE);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                returnBack();
+            }
+        });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToEditRestaurantFragment direction =
+                        RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToEditRestaurantFragment(restaurant.getId());
+                Navigation.findNavController(view).navigate(direction);
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteRestaurant();
+            }
+        });
 
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
 
@@ -65,6 +94,10 @@ public class RestaurantInfoFragment extends Fragment {
         return view;
     }
 
+    private void returnBack() {
+        Navigation.findNavController(view).popBackStack();
+    }
+
     private void cancelLoad() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Operation failed");
@@ -74,7 +107,35 @@ public class RestaurantInfoFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                Navigation.findNavController(view).popBackStack();
+                returnBack();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void deleteRestaurant() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete restaurant");
+        builder.setMessage("Are you sure you want to delete this restaurant?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Model.instance.deleteRestaurant(restaurant, new GenericRestaurantListenerWithNoParam() {
+                    @Override
+                    public void onComplete() {
+                        dialogInterface.dismiss();
+                        returnBack();
+                    }
+                });
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
             }
         });
 
