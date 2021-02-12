@@ -49,6 +49,7 @@
             app:argType="string" />
         <action
             android:id="@+id/action_editRestaurantFragment_to_restaurantInfoFragment"
-            app:destination="@id/restaurantInfoFragment" />
+            app:destination="@id/restaurantInfoFragment"
+            app:popUpTo="@id/restaurantListFragment"/>
     </fragment>
 </navigation>
