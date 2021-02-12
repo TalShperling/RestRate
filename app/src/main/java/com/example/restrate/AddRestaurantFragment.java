@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.inputmethodservice.Keyboard;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -71,6 +72,7 @@ public class AddRestaurantFragment extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 saveRestaurant();
             }
         });
@@ -78,7 +80,7 @@ public class AddRestaurantFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                returnBack();
+                Utils.returnBack(view);
             }
         });
 
@@ -87,9 +89,7 @@ public class AddRestaurantFragment extends Fragment {
         return view;
     }
 
-    protected void returnBack() {
-        Navigation.findNavController(view).popBackStack();
-    }
+
 
     protected boolean validateNewRestaurantForm(Restaurant restToValidate) {
         boolean isFormValid = true;
@@ -141,7 +141,7 @@ public class AddRestaurantFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                returnBack();
+                Utils.returnBack(view);
             }
         });
 
