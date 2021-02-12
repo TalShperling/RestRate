@@ -85,10 +85,16 @@ public class ModelFirebase {
 
     public void upsertRestaurant(Restaurant restToAdd, GenericRestaurantListenerWithParam<Restaurant> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference newDocRef = db.collection(RESTAURANT_DB_NAME).document();
-        restToAdd.setId(newDocRef.getId());
+        DocumentReference docReference;
 
-        newDocRef.set(restToAdd.toMap())
+        if (restToAdd.getId() == null) {
+            docReference = db.collection(RESTAURANT_DB_NAME).document();
+            restToAdd.setId(docReference.getId());
+        } else {
+            docReference = db.collection(RESTAURANT_DB_NAME).document(restToAdd.getId());
+        }
+
+        docReference.set(restToAdd.toMap())
                 .addOnSuccessListener(new OnSuccessListener() {
                     @Override
                     public void onSuccess(Object o) {
@@ -105,11 +111,13 @@ public class ModelFirebase {
 
     }
 
-    public void deleteRestaurantById(String id, GenericRestaurantListenerWithNoParam listener) {
+    public void deleteRestaurant(Restaurant restaurant, GenericRestaurantListenerWithNoParam listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        restaurant.setIsDeleted(true);
 
-        db.collection(RESTAURANT_DB_NAME).document(id)
-                .delete()
+        db.collection(RESTAURANT_DB_NAME)
+                .document(restaurant.getId())
+                .set(restaurant.toMap())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

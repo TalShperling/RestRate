@@ -36,5 +36,22 @@
         <argument
             android:name="restaurantId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_restaurantInfoFragment_to_editRestaurantFragment"
+            app:destination="@id/editRestaurantFragment"
+            app:popUpTo="@id/restaurantListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editRestaurantFragment"
+        android:name="com.example.restrate.EditRestaurantFragment"
+        android:label="fragment_edit_restaurant"
+        tools:layout="@layout/fragment_edit_restaurant" >
+        <argument
+            android:name="restaurantId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_editRestaurantFragment_to_restaurantInfoFragment"
+            app:destination="@id/restaurantInfoFragment"
+            app:popUpTo="@id/restaurantListFragment" />
     </fragment>
 </navigation>
