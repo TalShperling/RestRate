@@ -110,6 +110,12 @@ public class RestaurantListFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideKeyboard(getActivity());
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.restlist_menu, menu);
 

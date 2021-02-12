@@ -260,4 +260,10 @@ public class AddRestaurantFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Utils.hideKeyboard(getActivity());
+    }
 }
