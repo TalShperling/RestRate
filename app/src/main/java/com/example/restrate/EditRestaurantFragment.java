@@ -67,4 +67,10 @@ public class EditRestaurantFragment extends AddRestaurantFragment {
             Picasso.get().load(editRestaurant.getImageURL()).placeholder(R.drawable.restaurant).into(avatarImageView);
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Utils.hideKeyboard(getActivity());
+    }
 }

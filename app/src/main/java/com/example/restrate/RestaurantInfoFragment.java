@@ -56,7 +56,7 @@ public class RestaurantInfoFragment extends Fragment {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                returnBack();
+                Utils.returnBack(view);
             }
         });
 
@@ -94,10 +94,6 @@ public class RestaurantInfoFragment extends Fragment {
         return view;
     }
 
-    private void returnBack() {
-        Navigation.findNavController(view).popBackStack();
-    }
-
     private void cancelLoad() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Operation failed");
@@ -107,7 +103,7 @@ public class RestaurantInfoFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                returnBack();
+                Utils.returnBack(view);
             }
         });
 
@@ -126,7 +122,7 @@ public class RestaurantInfoFragment extends Fragment {
                     @Override
                     public void onComplete() {
                         dialogInterface.dismiss();
-                        returnBack();
+                        Utils.returnBack(view);
                     }
                 });
             }
