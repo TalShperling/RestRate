@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/restaurantListFragment"
-        android:name="com.example.restrate.RestaurantListFragment"
+        android:name="com.example.restrate.restaurant.RestaurantListFragment"
         android:label="@string/restaurant_list"
         tools:layout="@layout/fragment_restaurant_list">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/addRestaurantFragment"
-        android:name="com.example.restrate.AddRestaurantFragment"
+        android:name="com.example.restrate.restaurant.AddRestaurantFragment"
         android:label="@string/add_restaurant"
         tools:layout="@layout/fragment_add_restaurant">
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/restaurantInfoFragment"
-        android:name="com.example.restrate.RestaurantInfoFragment"
+        android:name="com.example.restrate.restaurant.RestaurantInfoFragment"
         android:label="@string/restaurant_info"
         tools:layout="@layout/fragment_restaurant_info" >
         <argument
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/editRestaurantFragment"
-        android:name="com.example.restrate.EditRestaurantFragment"
+        android:name="com.example.restrate.restaurant.EditRestaurantFragment"
         android:label="@string/edit_restaurant"
         tools:layout="@layout/fragment_edit_restaurant">
         <argument

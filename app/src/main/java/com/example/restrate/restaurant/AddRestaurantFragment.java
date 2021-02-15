@@ -1,4 +1,4 @@
-package com.example.restrate;
+package com.example.restrate.restaurant;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,6 +21,10 @@ import android.widget.ProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.restrate.restaurant.AddRestaurantFragmentDirections;
+import com.example.restrate.MyApplication;
+import com.example.restrate.R;
+import com.example.restrate.Utils;
 import com.example.restrate.model.GenericRestaurantListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;

@@ -1,4 +1,4 @@
-package com.example.restrate;
+package com.example.restrate.restaurant;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
