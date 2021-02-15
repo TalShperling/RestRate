@@ -5,12 +5,12 @@
     android:id="@+id/restlist_swipe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RestaurantListFragment">
+    tools:context=".restaurant.RestaurantListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".RestaurantListFragment">
+        tools:context=".restaurant.RestaurantListFragment">
 
         <ProgressBar
             android:id="@+id/restlist_progress_bar"

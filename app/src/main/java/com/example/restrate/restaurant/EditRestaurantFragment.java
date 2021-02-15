@@ -1,4 +1,4 @@
-package com.example.restrate;
+package com.example.restrate.restaurant;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.navigation.Navigation;
 
+import com.example.restrate.restaurant.EditRestaurantFragmentDirections;
+import com.example.restrate.R;
+import com.example.restrate.restaurant.RestaurantInfoFragmentArgs;
+import com.example.restrate.Utils;
 import com.example.restrate.model.GenericRestaurantListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;

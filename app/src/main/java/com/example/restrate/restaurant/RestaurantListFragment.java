@@ -1,4 +1,4 @@
-package com.example.restrate;
+package com.example.restrate.restaurant;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.restrate.R;
+import com.example.restrate.restaurant.RestaurantListFragmentDirections;
+import com.example.restrate.Utils;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
