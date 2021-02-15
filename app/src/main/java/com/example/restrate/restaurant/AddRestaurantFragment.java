@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.inputmethodservice.Keyboard;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -21,11 +20,10 @@ import android.widget.ProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.restrate.restaurant.AddRestaurantFragmentDirections;
 import com.example.restrate.MyApplication;
 import com.example.restrate.R;
 import com.example.restrate.Utils;
-import com.example.restrate.model.GenericRestaurantListenerWithParam;
+import com.example.restrate.model.GenericEventListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.google.android.material.textfield.TextInputLayout;
@@ -163,14 +161,14 @@ public class AddRestaurantFragment extends Fragment {
         BitmapDrawable drawable = (BitmapDrawable) avatarImageView.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
 
-        Model.instance.uploadImage(bitmap, new GenericRestaurantListenerWithParam<String>() {
+        Model.instance.uploadImage(bitmap, new GenericEventListenerWithParam<String>() {
             @Override
             public void onComplete(String url) {
                 if (url == null) {
                     onSaveRestaurantOnServerFail();
                 } else {
                     restToSave.setImageURL(url);
-                    Model.instance.upsertRestaurant(restToSave, new GenericRestaurantListenerWithParam<Restaurant>() {
+                    Model.instance.upsertRestaurant(restToSave, new GenericEventListenerWithParam<Restaurant>() {
                         @Override
                         public void onComplete(Restaurant rest) {
                             onSaveRestaurantOnServerSuccess(rest);

@@ -11,7 +11,7 @@ public class ModelSQL {
         return AppLocalDb.db.restaurantDAO().getAll();
     }
 
-    public void upsertRestaurant(Restaurant restToAdd, GenericRestaurantListenerWithNoParam listener) {
+    public void upsertRestaurant(Restaurant restToAdd, GenericEventListenerWithNoParam listener) {
         class MyAsyncTask extends AsyncTask {
 
             @Override
@@ -33,7 +33,7 @@ public class ModelSQL {
         task.execute();
     }
 
-    public void deleteRestaurantById(Restaurant restaurant, GenericRestaurantListenerWithNoParam listener) {
+    public void deleteRestaurantById(Restaurant restaurant, GenericEventListenerWithNoParam listener) {
         class MyAsyncTask extends AsyncTask {
 
             @Override

@@ -11,6 +11,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,8 +24,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Document;
-
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,8 +31,10 @@ import java.util.UUID;
 
 public class ModelFirebase {
     private final String RESTAURANT_DB_NAME = "restaurants";
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser currentUser = mAuth.getCurrentUser();
 
-    public void getAllRestaurants(Long lastUpdated, final GenericRestaurantListenerWithParam listener) {
+    public void getAllRestaurants(Long lastUpdated, final GenericEventListenerWithParam listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         List<Restaurant> restList = new LinkedList<Restaurant>();
@@ -57,7 +61,7 @@ public class ModelFirebase {
                 });
     }
 
-    public void getRestaurantById(String id, GenericRestaurantListenerWithParam<Restaurant> listener) {
+    public void getRestaurantById(String id, GenericEventListenerWithParam<Restaurant> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(RESTAURANT_DB_NAME)
@@ -83,7 +87,7 @@ public class ModelFirebase {
                 });
     }
 
-    public void upsertRestaurant(Restaurant restToAdd, GenericRestaurantListenerWithParam<Restaurant> listener) {
+    public void upsertRestaurant(Restaurant restToAdd, GenericEventListenerWithParam<Restaurant> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docReference;
 
@@ -111,7 +115,7 @@ public class ModelFirebase {
 
     }
 
-    public void deleteRestaurant(Restaurant restaurant, GenericRestaurantListenerWithNoParam listener) {
+    public void deleteRestaurant(Restaurant restaurant, GenericEventListenerWithNoParam listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         restaurant.setIsDeleted(true);
 
@@ -134,7 +138,7 @@ public class ModelFirebase {
 
     }
 
-    public void uploadImage(Bitmap imageBmp, GenericRestaurantListenerWithParam<String> listener) {
+    public void uploadImage(Bitmap imageBmp, GenericEventListenerWithParam<String> listener) {
         UUID id = UUID.randomUUID();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -162,6 +166,53 @@ public class ModelFirebase {
         });
     }
 
-    public void getLatestId(GenericRestaurantListenerWithNoParam genericRestaurantListenerWithNoParam) {
+    public void login(String email, String password, GenericEventListenerWithNoParam listener) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            listener.onComplete();
+                        } else {
+                            Log.w("TAG", "signInWithEmail:failure", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public boolean isUserLoggedIn() {
+        return currentUser != null;
+    }
+
+    public void register(String email, String password, String fullName, GenericEventListenerWithParam<FirebaseUser> listener) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(fullName).build();
+
+                            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        listener.onComplete(user);
+                                    } else {
+                                        Log.w("TAG", "updateDisplayName:failure", task.getException());
+                                    }
+                                }
+                            });
+                        } else {
+                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void signOut(GenericEventListenerWithNoParam listener) {
+        FirebaseAuth.getInstance().signOut();
+        listener.onComplete();
     }
 }

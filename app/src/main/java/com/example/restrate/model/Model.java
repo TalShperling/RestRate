@@ -7,13 +7,16 @@ import android.graphics.Bitmap;
 import androidx.lifecycle.LiveData;
 
 import com.example.restrate.MyApplication;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.EventListener;
 import java.util.List;
 
 public class Model {
     public final static Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
     ModelSQL modelSQL = new ModelSQL();
+    private final static SharedPreferences sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
 
     private Model() {
     }
@@ -29,13 +32,12 @@ public class Model {
         return restaurantList;
     }
 
-    public void refreshAllRestaurants(final GenericRestaurantListenerWithNoParam listener) {
+    public void refreshAllRestaurants(final GenericEventListenerWithNoParam listener) {
         // 1. get local last update date
-        SharedPreferences sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
         long lastUpdated = sp.getLong("lastUpdated", 0);
 
         // 2. Get all updated records from firebase from the last update data
-        modelFirebase.getAllRestaurants(lastUpdated, new GenericRestaurantListenerWithParam<List<Restaurant>>() {
+        modelFirebase.getAllRestaurants(lastUpdated, new GenericEventListenerWithParam<List<Restaurant>>() {
             @Override
             public void onComplete(List<Restaurant> data) {
                 // 3. Insert the new updates to the local db
@@ -62,16 +64,16 @@ public class Model {
         });
     }
 
-    public void getRestaurantById(String id, GenericRestaurantListenerWithParam<Restaurant> listener) {
+    public void getRestaurantById(String id, GenericEventListenerWithParam<Restaurant> listener) {
         modelFirebase.getRestaurantById(id, listener);
     }
 
 
-    public void upsertRestaurant(Restaurant restToAdd, GenericRestaurantListenerWithParam<Restaurant> listener) {
-        modelFirebase.upsertRestaurant(restToAdd, new GenericRestaurantListenerWithParam<Restaurant>() {
+    public void upsertRestaurant(Restaurant restToAdd, GenericEventListenerWithParam<Restaurant> listener) {
+        modelFirebase.upsertRestaurant(restToAdd, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant restaurant) {
-                refreshAllRestaurants(new GenericRestaurantListenerWithNoParam() {
+                refreshAllRestaurants(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
                         listener.onComplete(restaurant);
@@ -81,11 +83,11 @@ public class Model {
         });
     }
 
-    public void deleteRestaurant(Restaurant restaurant, GenericRestaurantListenerWithNoParam listener) {
-        modelFirebase.deleteRestaurant(restaurant, new GenericRestaurantListenerWithNoParam() {
+    public void deleteRestaurant(Restaurant restaurant, GenericEventListenerWithNoParam listener) {
+        modelFirebase.deleteRestaurant(restaurant, new GenericEventListenerWithNoParam() {
             @Override
             public void onComplete() {
-                refreshAllRestaurants(new GenericRestaurantListenerWithNoParam() {
+                refreshAllRestaurants(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
                         if (listener != null) {
@@ -97,16 +99,38 @@ public class Model {
         });
     }
 
-    public void getLatestId(Restaurant restToAdd, GenericRestaurantListenerWithNoParam listener) {
-        modelFirebase.getLatestId(new GenericRestaurantListenerWithNoParam() {
-            @Override
-            public void onComplete() {
+    public void uploadImage(Bitmap imageBmp, GenericEventListenerWithParam<String> listener) {
+        modelFirebase.uploadImage(imageBmp, listener);
+    }
 
+    public boolean isUserLoggedIn() {
+        return modelFirebase.isUserLoggedIn();
+    }
+
+    public void register(String email, String password, String fullName, GenericEventListenerWithParam<User> listener) {
+        modelFirebase.register(email, password, fullName, new GenericEventListenerWithParam<FirebaseUser>() {
+
+            @Override
+            public void onComplete(FirebaseUser fbUser) {
+                User user = new User();
+                user.setUser(fbUser);
+
+                listener.onComplete(user);
             }
         });
     }
 
-    public void uploadImage(Bitmap imageBmp, GenericRestaurantListenerWithParam<String> listener) {
-        modelFirebase.uploadImage(imageBmp, listener);
+    public void login(String email, String password, GenericEventListenerWithNoParam listener) {
+        modelFirebase.login(email, password, new GenericEventListenerWithNoParam() {
+
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
+    }
+
+    public void signOut(GenericEventListenerWithNoParam listener) {
+        modelFirebase.signOut(listener);
     }
 }

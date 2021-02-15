@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 
 import androidx.navigation.Navigation;
 
-import com.example.restrate.restaurant.EditRestaurantFragmentDirections;
 import com.example.restrate.R;
-import com.example.restrate.restaurant.RestaurantInfoFragmentArgs;
 import com.example.restrate.Utils;
-import com.example.restrate.model.GenericRestaurantListenerWithParam;
+import com.example.restrate.model.GenericEventListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.squareup.picasso.Picasso;
@@ -27,7 +25,7 @@ public class EditRestaurantFragment extends AddRestaurantFragment {
 
         pb.setVisibility(View.VISIBLE);
 
-        Model.instance.getRestaurantById(restaurantId, new GenericRestaurantListenerWithParam<Restaurant>() {
+        Model.instance.getRestaurantById(restaurantId, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant restaurant) {
                 editRestaurant = restaurant;
