@@ -147,6 +147,7 @@ public class RestaurantInfoFragment extends Fragment {
         restaurantDescription.setText(restaurant.getDescription());
         restaurantAddress.setText(restaurant.getAddress());
         restaurantPhone.setText(restaurant.getPhoneNumber());
+        restaurantSiteLink.setText(restaurant.getSiteLink());
         loadImage();
     }
 

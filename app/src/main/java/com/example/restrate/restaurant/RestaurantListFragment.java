@@ -178,10 +178,10 @@ public class RestaurantListFragment extends Fragment {
             });
         }
 
-        private String costMeterTextConverter(float costMeter) {
+        private String costMeterTextConverter(String costMeter) {
             String costMeterStringified = "";
 
-            for (int i = 0; i < costMeter; i++) {
+            for (int i = 0; i < Integer.parseInt(costMeter); i++) {
                 costMeterStringified = costMeterStringified.concat("$");
             }
 
@@ -189,12 +189,10 @@ public class RestaurantListFragment extends Fragment {
         }
 
         private void bindData(Restaurant restaurant, int position) {
-            restaurant.setRate(new Double(3));
-            restaurant.setCostMeter(new Long(2));
             this.position = position;
             restName.setText(restaurant.getName());
             restAddress.setText(restaurant.getAddress());
-            restRating.setRating(restaurant.getRate().floatValue());
+            restRating.setRating(Float.parseFloat(restaurant.getRate()));
             restCostMeter.setText(costMeterTextConverter(restaurant.getCostMeter()));
         }
     }

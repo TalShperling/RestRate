@@ -21,8 +21,8 @@ public class Restaurant {
     private String phoneNumber;
     private String siteLink;
     private String imageURL;
-    private Double rate;
-    private Long costMeter;
+    private String rate;
+    private String costMeter;
     private Long lastUpdated;
     private Boolean isDeleted = false;
 
@@ -50,8 +50,8 @@ public class Restaurant {
         phoneNumber = (String) map.get("phoneNumber");
         siteLink = (String) map.get("siteLink");
         imageURL = (String) map.get("imageURL");
-        costMeter = (Long) map.get("costMeter");
-        rate = (Double) map.get("rate");
+        costMeter = (String) map.get("costMeter");
+        rate = (String) map.get("rate");
         lastUpdated = ((Timestamp) map.get("lastUpdated")).getSeconds();
         isDeleted = (Boolean) map.get("isDeleted");
     }
@@ -113,19 +113,19 @@ public class Restaurant {
         this.imageURL = imageURL;
     }
 
-    public Double getRate() {
+    public String getRate() {
         return rate;
     }
 
-    public void setRate(Double rate) {
+    public void setRate(String rate) {
         this.rate = rate;
     }
 
-    public Long getCostMeter() {
+    public String getCostMeter() {
         return costMeter;
     }
 
-    public void setCostMeter(Long costMeter) {
+    public void setCostMeter(String costMeter) {
         this.costMeter = costMeter;
     }
 

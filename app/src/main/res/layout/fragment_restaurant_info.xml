@@ -53,7 +53,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@+id/restinfo_image"
-        app:layout_constraintTop_toTopOf="@+id/restinfo_siteLink" />
+        app:layout_constraintTop_toTopOf="@+id/restinfo_siteLink"
+        android:autoLink="phone"
+        android:linksClickable="true"/>
 
     <TextView
         android:id="@+id/restinfo_siteLink"
@@ -63,7 +65,9 @@
         android:layout_marginEnd="40dp"
         app:layout_constraintEnd_toStartOf="@+id/restinfo_phone"
         app:layout_constraintStart_toStartOf="@+id/restinfo_name"
-        app:layout_constraintTop_toBottomOf="@+id/restinfo_address" />
+        app:layout_constraintTop_toBottomOf="@+id/restinfo_address"
+        android:autoLink="web"
+        android:linksClickable="true"/>
 
     <ProgressBar
         android:id="@+id/restinfo_pb"

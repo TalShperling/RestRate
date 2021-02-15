@@ -187,6 +187,8 @@ public class AddRestaurantFragment extends Fragment {
         restaurant.setPhoneNumber(phoneET.getEditText().getText().toString());
         restaurant.setAddress(addressET.getEditText().getText().toString());
         restaurant.setSiteLink(linkET.getEditText().getText().toString());
+        restaurant.setRate("0");
+        restaurant.setCostMeter("0");
 
         if (validateNewRestaurantForm(restaurant)) {
             saveRestaurantOnServer(restaurant);
