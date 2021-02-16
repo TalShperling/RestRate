@@ -166,15 +166,15 @@ public class ModelFirebase {
         });
     }
 
-    public void login(String email, String password, GenericEventListenerWithNoParam listener) {
+    public void login(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            listener.onComplete();
+                            onSuccessListener.onComplete();
                         } else {
-                            Log.w("TAG", "signInWithEmail:failure", task.getException());
+                            onFailListener.onComplete();
                         }
                     }
                 });
@@ -184,7 +184,11 @@ public class ModelFirebase {
         return currentUser != null;
     }
 
-    public void register(String email, String password, String fullName, GenericEventListenerWithParam<FirebaseUser> listener) {
+    public FirebaseUser getCurrentUser() {
+        return currentUser;
+    }
+
+    public void register(String email, String password, String fullName, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener ) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -198,20 +202,18 @@ public class ModelFirebase {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        listener.onComplete(user);
-                                    } else {
-                                        Log.w("TAG", "updateDisplayName:failure", task.getException());
+                                        onSuccessListener.onComplete();
                                     }
                                 }
                             });
                         } else {
-                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
+                            onFailListener.onComplete();
                         }
                     }
                 });
     }
 
-    public void signOut(GenericEventListenerWithNoParam listener) {
+    public void logout(GenericEventListenerWithNoParam listener) {
         FirebaseAuth.getInstance().signOut();
         listener.onComplete();
     }

@@ -103,34 +103,52 @@ public class Model {
         modelFirebase.uploadImage(imageBmp, listener);
     }
 
+    public FirebaseUser getCurrentUser() {
+        return modelFirebase.getCurrentUser();
+    }
+
     public boolean isUserLoggedIn() {
         return modelFirebase.isUserLoggedIn();
     }
 
-    public void register(String email, String password, String fullName, GenericEventListenerWithParam<User> listener) {
-        modelFirebase.register(email, password, fullName, new GenericEventListenerWithParam<FirebaseUser>() {
-
-            @Override
-            public void onComplete(FirebaseUser fbUser) {
-                User user = new User();
-                user.setUser(fbUser);
-
-                listener.onComplete(user);
-            }
-        });
-    }
-
-    public void login(String email, String password, GenericEventListenerWithNoParam listener) {
-        modelFirebase.login(email, password, new GenericEventListenerWithNoParam() {
-
+    public void register(String email, String password, String fullName,GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+        GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
             @Override
             public void onComplete() {
-                listener.onComplete();
+                onSuccessListener.onComplete();
             }
-        });
+        };
+
+        GenericEventListenerWithNoParam onFail = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onFailListener.onComplete();
+            }
+        };
+
+        modelFirebase.register(email, password, fullName, onSuccess, onFail);
     }
 
-    public void signOut(GenericEventListenerWithNoParam listener) {
-        modelFirebase.signOut(listener);
+    public void login(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+
+        GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onSuccessListener.onComplete();
+            }
+        };
+
+        GenericEventListenerWithNoParam onFail = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onFailListener.onComplete();
+            }
+        };
+
+        modelFirebase.login(email, password, onSuccess, onFail);
+    }
+
+    public void logout(GenericEventListenerWithNoParam listener) {
+        modelFirebase.logout(listener);
     }
 }

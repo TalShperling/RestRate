@@ -11,6 +11,15 @@
     <string name="restaurant_info">Restaurant Info</string>
     <string name="add_restaurant">Add Restaurant</string>
     <string name="edit_restaurant">Edit Restaurant</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
+    <string name="register_full_name">Full name</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Password</string>
+    <string name="register_repeat_password">Repeat password</string>
+    <string name="register_register_btn">Register</string>
+    <string name="register_cancel_btn">Cancel</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_title">Search</string>

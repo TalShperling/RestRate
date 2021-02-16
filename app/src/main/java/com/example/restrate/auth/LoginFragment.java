@@ -1,15 +1,21 @@
 package com.example.restrate.auth;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.restrate.DrawerLocker;
 import com.example.restrate.R;
 import com.example.restrate.model.GenericEventListenerWithNoParam;
 import com.example.restrate.model.Model;
@@ -24,6 +30,7 @@ public class LoginFragment extends Fragment {
     private TextInputLayout passwordET;
     private TextView newUser;
     private Button loginBtn;
+    private ProgressBar loginPB;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,14 +38,15 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        if (Model.instance.isUserLoggedIn()) {
-            navigateAfterLoggedIn();
-        }
+        ((DrawerLocker) getActivity()).setDrawerEnabled(false);
 
         emailET = view.findViewById(R.id.login_email);
         passwordET = view.findViewById(R.id.login_password);
         loginBtn = view.findViewById(R.id.login_login_btn);
         newUser = view.findViewById(R.id.login_newUser);
+        loginPB = view.findViewById(R.id.login_pb);
+
+        loginPB.setVisibility(View.INVISIBLE);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +65,16 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        if (Model.instance.isUserLoggedIn()) {
+            Log.d("TAG", "User is already logged in: " + Model.instance.getCurrentUser());
+            navigateAfterLoggedIn();
+        }
+    }
+
     private void login() {
+        loginPB.setVisibility(View.VISIBLE);
         String email = emailET.getEditText().getText().toString();
         String password = passwordET.getEditText().getText().toString();
 
@@ -66,12 +83,22 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onComplete() {
                     navigateAfterLoggedIn();
+                    loginPB.setVisibility(View.INVISIBLE);
+                }
+            }, new GenericEventListenerWithNoParam() {
+                @Override
+                public void onComplete() {
+                    Toast.makeText(getActivity(), "Email/Password are incorrect", Toast.LENGTH_LONG).show();
+                    loginPB.setVisibility(View.INVISIBLE);
                 }
             });
+        } else {
+            loginPB.setVisibility(View.INVISIBLE);
         }
     }
 
     private void navigateAfterLoggedIn() {
+//        ((DrawerLocker) getActivity()).setDrawerEnabled(true);
         Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_restaurantListFragment);
     }
 
