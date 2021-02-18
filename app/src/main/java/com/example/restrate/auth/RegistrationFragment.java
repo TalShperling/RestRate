@@ -1,10 +1,10 @@
 package com.example.restrate.auth;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -35,6 +35,8 @@ public class RegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_registration, container, false);
 
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         fullNameET = view.findViewById(R.id.register_full_name);
         emailET = view.findViewById(R.id.register_email);
         passwordET = view.findViewById(R.id.register_password);
@@ -48,6 +50,7 @@ public class RegistrationFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utils.hideKeyboard(getActivity());
                 Utils.returnBack(view);
             }
         });
@@ -91,6 +94,7 @@ public class RegistrationFragment extends Fragment {
     }
 
     private void navigateAfterRegister() {
+        Utils.hideKeyboard(getActivity());
         Utils.returnBack(view);
     }
 

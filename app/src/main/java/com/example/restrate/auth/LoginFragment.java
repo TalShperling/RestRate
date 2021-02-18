@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,9 +20,9 @@ import com.example.restrate.DrawerLocker;
 import com.example.restrate.R;
 import com.example.restrate.model.GenericEventListenerWithNoParam;
 import com.example.restrate.model.Model;
-import com.example.restrate.model.User;
 import com.google.android.material.textfield.TextInputLayout;
 
+import static com.example.restrate.Utils.hideKeyboard;
 import static com.example.restrate.Utils.isValidEmail;
 
 public class LoginFragment extends Fragment {
@@ -37,6 +38,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         ((DrawerLocker) getActivity()).setDrawerEnabled(false);
 
@@ -83,6 +86,7 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onComplete() {
                     navigateAfterLoggedIn();
+                    hideKeyboard(getActivity());
                     loginPB.setVisibility(View.INVISIBLE);
                 }
             }, new GenericEventListenerWithNoParam() {

@@ -1,28 +1,21 @@
 package com.example.restrate;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.view.View;
 import android.view.Menu;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements DrawerLocker{
     private DrawerLayout drawer;
     private AppBarConfiguration mAppBarConfiguration;
-//    private ActionBarDrawerToggle toggle;
     private Toolbar toolbar;
 
     @Override
@@ -33,8 +26,6 @@ public class MainActivity extends AppCompatActivity implements DrawerLocker{
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
-//        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

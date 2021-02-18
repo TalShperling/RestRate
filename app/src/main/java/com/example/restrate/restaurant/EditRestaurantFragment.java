@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.navigation.Navigation;
 
@@ -21,6 +22,9 @@ public class EditRestaurantFragment extends AddRestaurantFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
 
         pb.setVisibility(View.VISIBLE);
