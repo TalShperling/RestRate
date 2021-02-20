@@ -60,7 +60,7 @@
         <action
             android:id="@+id/action_loginFragment_to_restaurantListFragment"
             app:destination="@id/restaurantListFragment"
-            app:popUpTo="@id/loginFragment"
+            app:popUpTo="@id/mobile_navigation"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
@@ -79,7 +79,12 @@
         <action
             android:id="@+id/action_logoutFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.restrate.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 </navigation>

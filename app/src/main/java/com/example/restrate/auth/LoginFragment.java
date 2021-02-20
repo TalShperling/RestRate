@@ -2,6 +2,7 @@ package com.example.restrate.auth;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,18 @@ public class LoginFragment extends Fragment {
         loginPB = view.findViewById(R.id.login_pb);
 
         loginPB.setVisibility(View.INVISIBLE);
+
+        passwordET.getEditText().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    login();
+                    return true;
+                }
+
+                return  false;
+            }
+        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,8 +115,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void navigateAfterLoggedIn() {
-//        ((DrawerLocker) getActivity()).setDrawerEnabled(true);
-        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_restaurantListFragment);
+        Navigation.findNavController(view).navigate(LoginFragmentDirections.actionLoginFragmentToRestaurantListFragment());
     }
 
     private void navigateToRegister() {

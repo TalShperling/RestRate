@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.restrate.R;
-import com.example.restrate.restaurant.RestaurantListFragmentDirections;
 import com.example.restrate.Utils;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
@@ -88,6 +87,8 @@ public class RestaurantListFragment extends Fragment {
             }
         });
 
+
+
         viewModel.getRestaurants().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
             @Override
             public void onChanged(List<Restaurant> restaurants) {
@@ -111,6 +112,8 @@ public class RestaurantListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
+
 
     @Override
     public void onPause() {

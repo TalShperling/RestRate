@@ -54,13 +54,11 @@ public class MainActivity extends AppCompatActivity implements DrawerLocker{
 
     @Override
     public void setDrawerEnabled(boolean enabled) {
-        if(enabled) {
+        if (enabled) {
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         } else {
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             toolbar.setNavigationIcon(null);
         }
-
-
     }
 }

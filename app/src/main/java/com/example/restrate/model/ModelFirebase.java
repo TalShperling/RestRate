@@ -32,7 +32,6 @@ import java.util.UUID;
 public class ModelFirebase {
     private final String RESTAURANT_DB_NAME = "restaurants";
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseUser currentUser = mAuth.getCurrentUser();
 
     public void getAllRestaurants(Long lastUpdated, final GenericEventListenerWithParam listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -181,11 +180,11 @@ public class ModelFirebase {
     }
 
     public boolean isUserLoggedIn() {
-        return currentUser != null;
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
     public FirebaseUser getCurrentUser() {
-        return currentUser;
+        return FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public void register(String email, String password, String fullName, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener ) {

@@ -1,6 +1,7 @@
 package com.example.restrate.restaurant;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,18 @@ public class EditRestaurantFragment extends AddRestaurantFragment {
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
 
         pb.setVisibility(View.VISIBLE);
+
+        linkET.getEditText().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    saveRestaurant();
+                    return true;
+                }
+
+                return  false;
+            }
+        });
 
         Model.instance.getRestaurantById(restaurantId, new GenericEventListenerWithParam<Restaurant>() {
             @Override
