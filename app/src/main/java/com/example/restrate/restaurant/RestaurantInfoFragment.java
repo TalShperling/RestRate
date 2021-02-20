@@ -15,11 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.restrate.R;
-import com.example.restrate.restaurant.RestaurantInfoFragmentArgs;
-import com.example.restrate.restaurant.RestaurantInfoFragmentDirections;
 import com.example.restrate.Utils;
-import com.example.restrate.model.GenericRestaurantListenerWithNoParam;
-import com.example.restrate.model.GenericRestaurantListenerWithParam;
+import com.example.restrate.model.GenericEventListenerWithNoParam;
+import com.example.restrate.model.GenericEventListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.squareup.picasso.Picasso;
@@ -82,7 +80,7 @@ public class RestaurantInfoFragment extends Fragment {
 
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
 
-        Model.instance.getRestaurantById(restaurantId, new GenericRestaurantListenerWithParam<Restaurant>() {
+        Model.instance.getRestaurantById(restaurantId, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant data) {
                 pb.setVisibility(View.INVISIBLE);
@@ -122,7 +120,7 @@ public class RestaurantInfoFragment extends Fragment {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Model.instance.deleteRestaurant(restaurant, new GenericRestaurantListenerWithNoParam() {
+                Model.instance.deleteRestaurant(restaurant, new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
                         dialogInterface.dismiss();

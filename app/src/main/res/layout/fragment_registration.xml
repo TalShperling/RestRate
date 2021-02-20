@@ -4,20 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".restaurant.AddRestaurantFragment">
+    tools:context=".auth.RegistrationFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="-28dp">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/addrest_image"
+                android:id="@+id/register_image"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_marginStart="1dp"
@@ -32,21 +30,21 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/addrest_edit_image_btn"
+                android:id="@+id/register_edit_image_btn"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="#00FFFFFF"
                 android:scaleType="fitXY"
                 android:src="@android:drawable/ic_menu_edit"
-                app:layout_constraintBottom_toBottomOf="@+id/addrest_image"
-                app:layout_constraintStart_toEndOf="@+id/addrest_image" />
+                app:layout_constraintBottom_toBottomOf="@+id/register_image"
+                app:layout_constraintStart_toEndOf="@+id/register_image" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addrest_name"
+                android:id="@+id/register_full_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="15dp"
                 android:layout_marginEnd="30dp"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
@@ -54,24 +52,21 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addrest_image">
+                app:layout_constraintTop_toBottomOf="@+id/register_image">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Restaurant name"
-                    android:maxLength="14"
+                    android:hint="@string/register_full_name"
                     android:textSize="18sp" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addrest_description"
+                android:id="@+id/register_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="30dp"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
@@ -79,22 +74,22 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addrest_name">
+                app:layout_constraintTop_toBottomOf="@+id/register_full_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:hint="Description"
-                    android:maxLength="100" />
-
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_email"
+                    android:inputType="textEmailAddress"
+                    android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addrest_address"
+                android:id="@+id/register_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="30dp"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
@@ -102,98 +97,77 @@
                 app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addrest_description">
+                app:layout_constraintTop_toBottomOf="@+id/register_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Address"
-                    android:maxLength="14"/>
+                    android:hint="@string/register_password"
+                    android:inputType="textPassword"
+                    android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addrest_phoneNumber"
+                android:id="@+id/register_repeat_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="30dp"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addrest_address">
+                app:layout_constraintTop_toBottomOf="@+id/register_password">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Phone number"
-                    android:inputType="phone"
-                    android:maxLength="10"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addrest_siteLink"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="30dp"
-                app:boxCornerRadiusBottomEnd="10dp"
-                app:boxCornerRadiusBottomStart="10dp"
-                app:boxCornerRadiusTopEnd="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addrest_phoneNumber">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Site URL"
-                    android:inputType="textUri"/>
+                    android:hint="@string/register_repeat_password"
+                    android:inputType="textPassword"
+                    android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/addrest_save_btn"
+                android:id="@+id/register_register_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Save"
-                android:textSize="20sp"
+                android:layout_marginTop="80dp"
+                android:text="@string/register_register_btn"
+                android:textSize="24sp"
                 app:backgroundTint="#4CAF50"
-                app:layout_constraintEnd_toStartOf="@+id/addrest_cancel_btn"
+                app:layout_constraintEnd_toStartOf="@+id/register_cancel_btn"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addrest_siteLink" />
+                app:layout_constraintTop_toBottomOf="@+id/register_repeat_password" />
 
             <Button
-                android:id="@+id/addrest_cancel_btn"
+                android:id="@+id/register_cancel_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:text="Cancel"
-                android:textSize="18sp"
-                app:backgroundTint="#FD0000"
-                app:iconTint="#FFFFFF"
+                android:text="@string/register_cancel_btn"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorLink="#FFFFFF"
+                android:textSize="24sp"
+                app:backgroundTint="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/addrest_save_btn"
-                app:layout_constraintTop_toTopOf="@+id/addrest_save_btn" />
+                app:layout_constraintStart_toEndOf="@+id/register_register_btn"
+                app:layout_constraintTop_toTopOf="@+id/register_register_btn"
+                app:rippleColor="#FFFFFF" />
 
             <ProgressBar
-                android:id="@+id/addrest_progress_bar"
+                android:id="@+id/register_pb"
                 style="?android:attr/progressBarStyle"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

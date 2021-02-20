@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/restaurantListFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/restaurantListFragment"
@@ -52,4 +52,39 @@
             app:destination="@id/restaurantInfoFragment"
             app:popUpTo="@id/restaurantListFragment"/>
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.restrate.auth.LoginFragment"
+        android:label="@string/login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_restaurantListFragment"
+            app:destination="@id/restaurantListFragment"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.example.restrate.auth.RegistrationFragment"
+        android:label="@string/register"
+        tools:layout="@layout/fragment_registration" />
+    <fragment
+        android:id="@+id/logoutFragment"
+        android:name="com.example.restrate.auth.LogoutFragment"
+        android:label="@string/logout"
+        tools:layout="@layout/fragment_logout">
+        <action
+            android:id="@+id/action_logoutFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.restrate.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 </navigation>

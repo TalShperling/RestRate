@@ -1,5 +1,5 @@
 package com.example.restrate.model;
 
-public interface GenericRestaurantListenerWithNoParam {
+public interface GenericEventListenerWithNoParam {
     void onComplete();
 }

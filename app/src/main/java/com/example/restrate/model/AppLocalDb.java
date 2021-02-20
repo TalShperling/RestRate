@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.restrate.MyApplication;
 
-@Database(entities = {Restaurant.class}, version = 9)
+@Database(entities = {Restaurant.class}, version = 11)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract RestaurantDAO restaurantDAO();
 }

@@ -1,17 +1,17 @@
 package com.example.restrate.restaurant;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.navigation.Navigation;
 
-import com.example.restrate.restaurant.EditRestaurantFragmentDirections;
 import com.example.restrate.R;
-import com.example.restrate.restaurant.RestaurantInfoFragmentArgs;
 import com.example.restrate.Utils;
-import com.example.restrate.model.GenericRestaurantListenerWithParam;
+import com.example.restrate.model.GenericEventListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.squareup.picasso.Picasso;
@@ -23,11 +23,26 @@ public class EditRestaurantFragment extends AddRestaurantFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
 
         pb.setVisibility(View.VISIBLE);
 
-        Model.instance.getRestaurantById(restaurantId, new GenericRestaurantListenerWithParam<Restaurant>() {
+        linkET.getEditText().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    saveRestaurant();
+                    return true;
+                }
+
+                return  false;
+            }
+        });
+
+        Model.instance.getRestaurantById(restaurantId, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant restaurant) {
                 editRestaurant = restaurant;
