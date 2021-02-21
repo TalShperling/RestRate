@@ -3,13 +3,13 @@ package com.example.restrate.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.restrate.MyApplication;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.EventListener;
 import java.util.List;
 
 public class Model {
@@ -111,7 +111,7 @@ public class Model {
         return modelFirebase.isUserLoggedIn();
     }
 
-    public void register(String email, String password, String fullName,GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+    public void register(String email, String password, String fullName, Uri imageUri, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
         GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
             @Override
             public void onComplete() {
@@ -126,7 +126,7 @@ public class Model {
             }
         };
 
-        modelFirebase.register(email, password, fullName, onSuccess, onFail);
+        modelFirebase.register(email, password, fullName, imageUri, onSuccess, onFail);
     }
 
     public void login(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {

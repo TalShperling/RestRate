@@ -1,8 +1,11 @@
 package com.example.restrate.auth;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -69,12 +72,12 @@ public class RegistrationFragment extends Fragment {
         repeatPasswordET.getEditText().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
                     register();
                     return true;
                 }
 
-                return  false;
+                return false;
             }
         });
 
@@ -112,24 +115,56 @@ public class RegistrationFragment extends Fragment {
         String fullName = fullNameET.getEditText().getText().toString();
 
         if (verifyRegisterCredentials(fullName, email, password, repeatPassword)) {
-            Model.instance.register(email, password, fullName, new GenericEventListenerWithNoParam() {
-                @Override
-                public void onComplete() {
-                    Toast.makeText(getActivity(), "Register succeeded!", Toast.LENGTH_LONG).show();
-                    registerPB.setVisibility(View.INVISIBLE);
-                    navigateAfterRegister();
-                }
-            }, new GenericEventListenerWithNoParam() {
-                @Override
-                public void onComplete() {
-                    Toast.makeText(getActivity(), "An error occurred while trying to register, please try again", Toast.LENGTH_LONG).show();
-                    registerPB.setVisibility(View.INVISIBLE);
-                    navigateAfterRegister();
-                }
-            });
+            registerUserOnServer(email, password, fullName);
         } else {
             registerPB.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void registerUserOnServer(String email, String password, String fullName) {
+        BitmapDrawable drawable = (BitmapDrawable) avatarImageView.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+
+        Model.instance.uploadImage(bitmap, new GenericEventListenerWithParam<String>() {
+            @Override
+            public void onComplete(String url) {
+                if (url == null) {
+                    onRegisterUserOnServerFail();
+                } else {
+                    Model.instance.register(email, password, fullName, Uri.parse(url), new GenericEventListenerWithNoParam() {
+                        @Override
+                        public void onComplete() {
+                            Toast.makeText(getActivity(), "Welcome " + fullName + "!", Toast.LENGTH_LONG).show();
+                            registerPB.setVisibility(View.INVISIBLE);
+                            navigateAfterRegister();
+                        }
+                    }, new GenericEventListenerWithNoParam() {
+                        @Override
+                        public void onComplete() {
+                            Toast.makeText(getActivity(), "An error occurred while trying to register, please try again", Toast.LENGTH_LONG).show();
+                            registerPB.setVisibility(View.INVISIBLE);
+                            navigateAfterRegister();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void onRegisterUserOnServerFail() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Operation failed");
+        builder.setMessage("Could not register, please try again later");
+
+        builder.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                Utils.returnBack(view);
+            }
+        });
+
+        builder.show();
     }
 
     private void navigateAfterRegister() {

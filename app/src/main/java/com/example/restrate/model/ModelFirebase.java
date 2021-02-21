@@ -187,7 +187,7 @@ public class ModelFirebase {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    public void register(String email, String password, String fullName, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener ) {
+    public void register(String email, String password, String fullName, Uri imageURL, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener ) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -195,7 +195,7 @@ public class ModelFirebase {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(fullName).build();
+                                    .setDisplayName(fullName).setPhotoUri(imageURL).build();
 
                             user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

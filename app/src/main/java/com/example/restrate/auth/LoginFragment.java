@@ -115,6 +115,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void navigateAfterLoggedIn() {
+        String displayName = Model.instance.getCurrentUser().getDisplayName();
+        Toast.makeText(getActivity(), "Welcome back " + displayName + "!", Toast.LENGTH_LONG).show();
         Navigation.findNavController(view).navigate(LoginFragmentDirections.actionLoginFragmentToRestaurantListFragment());
     }
 
