@@ -13,6 +13,8 @@
     <string name="edit_restaurant">Edit Restaurant</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="my_profile">My Profile</string>
+    <string name="edit">Edit</string>
     <string name="register">Register</string>
     <string name="register_full_name">Full name</string>
     <string name="register_email">Email</string>
@@ -27,4 +29,5 @@
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
     <string name="login_new"><u>New User?</u></string>
+    <string name="profile_your_reviews"><u>Your reviews:</u></string>
 </resources>

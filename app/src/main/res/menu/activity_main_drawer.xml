@@ -9,6 +9,10 @@
             android:icon="@android:drawable/ic_dialog_dialer"
             android:title="@string/restaurant_list" />
         <item
+            android:id="@+id/userProfileFragment"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/my_profile" />
+        <item
             android:id="@+id/logoutFragment"
             android:icon="@drawable/common_full_open_on_phone"
             android:title="@string/logout" />

@@ -113,8 +113,6 @@ public class RestaurantListFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-
-
     @Override
     public void onPause() {
         super.onPause();

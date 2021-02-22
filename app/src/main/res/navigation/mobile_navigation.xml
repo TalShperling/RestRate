@@ -85,6 +85,20 @@
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.restrate.UserProfileFragment"
-        android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        android:label="@string/my_profile"
+        tools:layout="@layout/fragment_user_profile" >
+        <action
+            android:id="@+id/action_userProfileFragment_to_editUserProfileFragment"
+            app:destination="@id/editUserProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editUserProfileFragment"
+        android:name="com.example.restrate.EditUserProfileFragment"
+        android:label="fragment_edit_user_profile"
+        tools:layout="@layout/fragment_edit_user_profile" />
+    <action
+        android:id="@+id/action_global_restaurantListFragment"
+        app:destination="@id/restaurantListFragment"
+        app:popUpTo="@id/mobile_navigation"
+        app:popUpToInclusive="true" />
 </navigation>
