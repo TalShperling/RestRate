@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="35dp"
-        android:text="@string/profile_your_reviews"
+        android:text="@string/profile_my_reviews"
         android:textSize="30dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
