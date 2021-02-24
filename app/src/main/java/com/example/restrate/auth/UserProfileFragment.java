@@ -1,4 +1,4 @@
-package com.example.restrate;
+package com.example.restrate.auth;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 
+import com.example.restrate.R;
 import com.example.restrate.model.Model;
 import com.squareup.picasso.Picasso;
 

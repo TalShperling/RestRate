@@ -129,6 +129,24 @@ public class Model {
         modelFirebase.register(email, password, fullName, imageUri, onSuccess, onFail);
     }
 
+    public void updateUser(String email, String password, String fullName, Uri imageUri, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+        GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onSuccessListener.onComplete();
+            }
+        };
+
+        GenericEventListenerWithNoParam onFail = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onFailListener.onComplete();
+            }
+        };
+
+        modelFirebase.update(email, password, fullName, imageUri, onSuccess, onFail);
+    }
+
     public void login(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
 
         GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
@@ -146,6 +164,25 @@ public class Model {
         };
 
         modelFirebase.login(email, password, onSuccess, onFail);
+    }
+
+    public void reAuthenticate(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+
+        GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onSuccessListener.onComplete();
+            }
+        };
+
+        GenericEventListenerWithNoParam onFail = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onFailListener.onComplete();
+            }
+        };
+
+        modelFirebase.reAuthenticate(email, password, onSuccess, onFail);
     }
 
     public void logout(GenericEventListenerWithNoParam listener) {

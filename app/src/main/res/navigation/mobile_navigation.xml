@@ -84,7 +84,7 @@
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.example.restrate.UserProfileFragment"
+        android:name="com.example.restrate.auth.UserProfileFragment"
         android:label="@string/my_profile"
         tools:layout="@layout/fragment_user_profile" >
         <action
@@ -93,8 +93,8 @@
     </fragment>
     <fragment
         android:id="@+id/editUserProfileFragment"
-        android:name="com.example.restrate.EditUserProfileFragment"
-        android:label="fragment_edit_user_profile"
+        android:name="com.example.restrate.auth.EditUserProfileFragment"
+        android:label="@string/edit_my_profile"
         tools:layout="@layout/fragment_edit_user_profile" />
     <action
         android:id="@+id/action_global_restaurantListFragment"
