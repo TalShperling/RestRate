@@ -20,6 +20,7 @@ public class Review {
     private String restaurantId;
     @NonNull
     private String userId;
+    private String userDisplayName;
     private String description;
     private String rate;
     private String costMeter;
@@ -37,6 +38,7 @@ public class Review {
         result.put("reviewId", reviewId);
         result.put("restaurantId", restaurantId);
         result.put("userId", userId);
+        result.put("userDisplayName", userDisplayName);
         result.put("description", description);
         result.put("rate", rate);
         result.put("costMeter", costMeter);
@@ -49,6 +51,7 @@ public class Review {
         reviewId = (String) Objects.requireNonNull(map.get("reviewId"));
         restaurantId = (String) Objects.requireNonNull(map.get("restaurantId"));
         userId = (String) Objects.requireNonNull(map.get("userId"));
+        userDisplayName = (String) map.get("userDisplayName");
         description = (String) map.get("description");
         costMeter = (String) map.get("costMeter");
         rate = (String) map.get("rate");
@@ -82,6 +85,10 @@ public class Review {
     public void setUserId(@NonNull String userId) {
         this.userId = userId;
     }
+
+    public String getUserDisplayName() { return userDisplayName; }
+
+    public void setUserDisplayName(String displayName) { this.userDisplayName = displayName; }
 
     public String getDescription() {
         return description;

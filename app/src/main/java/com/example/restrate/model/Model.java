@@ -14,14 +14,13 @@ import java.util.List;
 
 public class Model {
     public final static Model instance = new Model();
+    private final static SharedPreferences sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
     ModelFirebase modelFirebase = new ModelFirebase();
     ModelSQL modelSQL = new ModelSQL();
-    private final static SharedPreferences sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
+    LiveData<List<Restaurant>> restaurantList;
 
     private Model() {
     }
-
-    LiveData<List<Restaurant>> restaurantList;
 
     public LiveData<List<Restaurant>> getAllRestaurants() {
         if (restaurantList == null) {
@@ -171,7 +170,7 @@ public class Model {
         return modelFirebase.isUserLoggedIn();
     }
 
-    public void register(String email, String password, String fullName,GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+    public void register(String email, String password, String fullName, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
         GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
             @Override
             public void onComplete() {

@@ -181,7 +181,7 @@ public class ModelFirebase {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docReference;
 
-        docReference = db.collection(RESTAURANT_DB_NAME).document(reviewToAdd.getReviewId());
+        docReference = db.collection(REVIEW_DB_NAME).document(reviewToAdd.getReviewId());
 
         docReference.set(reviewToAdd.toMap())
                 .addOnSuccessListener(new OnSuccessListener() {
