@@ -2,6 +2,7 @@ package com.example.restrate.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
@@ -10,8 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Entity(primaryKeys = {"restaurantId", "userId"})
+@Entity
 public class Review {
+    @PrimaryKey
+    @NonNull
+    private String reviewId;
     @NonNull
     private String restaurantId;
     @NonNull
@@ -23,12 +27,14 @@ public class Review {
     private Boolean isDeleted = false;
 
     public Review(@NonNull String restaurantId, @NonNull String userId) {
+        this.reviewId = restaurantId + '-' + userId;
         this.restaurantId = restaurantId;
         this.userId = userId;
     }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("reviewId", reviewId);
         result.put("restaurantId", restaurantId);
         result.put("userId", userId);
         result.put("description", description);
@@ -40,6 +46,7 @@ public class Review {
     }
 
     public void fromMap(Map<String, Object> map) {
+        reviewId = (String) Objects.requireNonNull(map.get("reviewId"));
         restaurantId = (String) Objects.requireNonNull(map.get("restaurantId"));
         userId = (String) Objects.requireNonNull(map.get("userId"));
         description = (String) map.get("description");
@@ -47,6 +54,15 @@ public class Review {
         rate = (String) map.get("rate");
         lastUpdated = ((Timestamp) Objects.requireNonNull(map.get("lastUpdated"))).getSeconds();
         isDeleted = (Boolean) map.get("isDeleted");
+    }
+
+    @NonNull
+    public String getReviewId() {
+        return reviewId;
+    }
+
+    public void setReviewId(@NonNull String reviewId) {
+        this.reviewId = reviewId;
     }
 
     @NonNull
@@ -99,11 +115,11 @@ public class Review {
         this.lastUpdated = lastUpdated;
     }
 
-    public Boolean getDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setIsDeleted(Boolean deleted) {
         isDeleted = deleted;
     }
 }

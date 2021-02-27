@@ -31,12 +31,13 @@ import java.util.UUID;
 
 public class ModelFirebase {
     private final String RESTAURANT_DB_NAME = "restaurants";
+    private final String REVIEW_DB_NAME = "reviews";
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public void getAllRestaurants(Long lastUpdated, final GenericEventListenerWithParam listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        List<Restaurant> restList = new LinkedList<Restaurant>();
+        List<Restaurant> restList = new LinkedList<>();
         Timestamp ts = new Timestamp(lastUpdated, 0);
 
         db.collection(RESTAURANT_DB_NAME)
@@ -135,6 +136,89 @@ public class ModelFirebase {
                     }
                 });
 
+        db.collection(REVIEW_DB_NAME).whereEqualTo("restaurantId", restaurant.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        document.getReference().update("isDeleted", true);
+                    }
+                } else {
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+    }
+
+    public void getAllReviews(Long lastUpdated, final GenericEventListenerWithParam listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        List<Review> reviewList = new LinkedList<Review>();
+        Timestamp ts = new Timestamp(lastUpdated, 0);
+
+        db.collection(REVIEW_DB_NAME)
+                .whereGreaterThanOrEqualTo("lastUpdated", ts)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Review review = new Review("", "");
+                                review.fromMap(document.getData());
+                                reviewList.add(review);
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                        listener.onComplete(reviewList);
+                    }
+                });
+    }
+
+    public void upsertReview(Review reviewToAdd, GenericEventListenerWithParam<Review> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docReference;
+
+        docReference = db.collection(RESTAURANT_DB_NAME).document(reviewToAdd.getReviewId());
+
+        docReference.set(reviewToAdd.toMap())
+                .addOnSuccessListener(new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        listener.onComplete(reviewToAdd);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error adding restaurant", e);
+                        listener.onComplete(null);
+                    }
+                });
+    }
+
+    public void deleteReview(Review review, GenericEventListenerWithNoParam listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        review.setIsDeleted(true);
+
+        db.collection(REVIEW_DB_NAME)
+                .document(review.getReviewId())
+                .set(review.toMap())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                        listener.onComplete();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
     }
 
     public void uploadImage(Bitmap imageBmp, GenericEventListenerWithParam<String> listener) {
