@@ -11,6 +11,10 @@ public class ModelSQL {
         return AppLocalDb.db.restaurantDAO().getAll();
     }
 
+    public LiveData<RestaurantWithReviews> getRestaurantWithReviews(String id) {
+        return AppLocalDb.db.restaurantDAO().getRestaurantWithReviews(id);
+    }
+
     public void upsertRestaurant(Restaurant restToAdd, GenericEventListenerWithNoParam listener) {
         class MyAsyncTask extends AsyncTask {
 
@@ -39,6 +43,50 @@ public class ModelSQL {
             @Override
             protected Object doInBackground(Object[] objects) {
                 AppLocalDb.db.restaurantDAO().delete(restaurant);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                if (listener != null) {
+                    listener.onComplete();
+                }
+            }
+        }
+
+        MyAsyncTask task = new MyAsyncTask();
+        task.execute();
+    }
+
+    public void upsertReview(Review reviewToAdd, GenericEventListenerWithNoParam listener) {
+        class MyAsyncTask extends AsyncTask {
+
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                AppLocalDb.db.reviewDAO().insertAll(reviewToAdd);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                if (listener != null) {
+                    listener.onComplete();
+                }
+            }
+        }
+
+        MyAsyncTask task = new MyAsyncTask();
+        task.execute();
+    }
+
+    public void deleteReview(Review review, GenericEventListenerWithNoParam listener) {
+        class MyAsyncTask extends AsyncTask {
+
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                AppLocalDb.db.reviewDAO().delete(review);
                 return null;
             }
 
