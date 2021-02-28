@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
 import com.example.restrate.R;
@@ -20,6 +21,7 @@ import com.example.restrate.model.GenericEventListenerWithNoParam;
 import com.example.restrate.model.GenericEventListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
+import com.example.restrate.review.ReviewListFragment;
 import com.squareup.picasso.Picasso;
 
 public class RestaurantInfoFragment extends Fragment {
@@ -54,6 +56,10 @@ public class RestaurantInfoFragment extends Fragment {
 
         pb = view.findViewById(R.id.restinfo_pb);
         pb.setVisibility(View.VISIBLE);
+
+        Fragment reviewsFregment = new ReviewListFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.restinfo_reviews_container, reviewsFregment).commit();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

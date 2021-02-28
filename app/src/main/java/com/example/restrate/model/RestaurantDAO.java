@@ -16,7 +16,7 @@ public interface RestaurantDAO {
     LiveData<List<Restaurant>> getAll();
 
     @Transaction
-    @Query("SELECT * FROM Restaurant where id = :id")
+    @Query("SELECT * FROM Restaurant where id = :id LIMIT 1")
     LiveData<RestaurantWithReviews> getRestaurantWithReviews(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
