@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.restrate.R;
 import com.example.restrate.Utils;
-import com.example.restrate.model.RestaurantWithReviews;
 import com.example.restrate.model.Review;
 import com.example.restrate.restaurant.RestaurantInfoFragmentArgs;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -131,7 +129,7 @@ public class ReviewListFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.review_list_row, null);
+            View view = getLayoutInflater().inflate(R.layout.review_list_row, parent, false);
             MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }

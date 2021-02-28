@@ -2,36 +2,37 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/review_listrow_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#8303A9F4">
+    android:layout_margin="4dp"
+    android:background="#F003A9F4">
 
     <TextView
-        android:id="@+id/review_listrow_username"
+        android:id="@+id/review_by"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="8dp"
+        android:text="by"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/review_listrow_rating"
+        app:layout_constraintStart_toStartOf="@+id/review_listrow_rating" />
 
     <RatingBar
         android:id="@+id/review_listrow_rating"
         android:layout_width="244dp"
         android:layout_height="54dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:clickable="false"
         android:focusable="false"
         android:isIndicator="true"
         android:scaleX=".5"
         android:scaleY=".5"
-        android:theme="@style/Widget.AppCompat.RatingBar.Indicator"
-        android:transformPivotX="150dp"
+        android:theme="@style/RatingBar"
+        android:transformPivotX="0dp"
         android:transformPivotY="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/review_listrow_cost_meter"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -59,4 +60,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/review_listrow_username" />
+
+    <TextView
+        android:id="@+id/review_listrow_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/review_by"
+        app:layout_constraintStart_toEndOf="@+id/review_by"
+        app:layout_constraintTop_toTopOf="@+id/review_by" />
 </androidx.constraintlayout.widget.ConstraintLayout>
