@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.restrate.R;
@@ -22,6 +23,7 @@ import com.example.restrate.model.GenericEventListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.example.restrate.review.ReviewListFragment;
+import com.example.restrate.review.ReviewListViewModel;
 import com.squareup.picasso.Picasso;
 
 public class RestaurantInfoFragment extends Fragment {
@@ -37,6 +39,7 @@ public class RestaurantInfoFragment extends Fragment {
     Button backBtn;
     Button editBtn;
     Button deleteBtn;
+    ReviewListViewModel reviewListViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +64,10 @@ public class RestaurantInfoFragment extends Fragment {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.restinfo_reviews_container, reviewsFregment).commit();
 
+        final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
+        reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
+
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,8 +91,6 @@ public class RestaurantInfoFragment extends Fragment {
             }
         });
 
-        final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
-
         Model.instance.getRestaurantById(restaurantId, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant data) {
@@ -93,6 +98,7 @@ public class RestaurantInfoFragment extends Fragment {
                 if (data != null) {
                     restaurant = data;
                     bindData(restaurant);
+                    reviewListViewModel.selectRestaurant(data.getId());
                 } else {
                     cancelLoad();
                 }

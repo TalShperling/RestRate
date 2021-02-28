@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.restrate.R;
 import com.example.restrate.Utils;
 import com.example.restrate.model.Review;
-import com.example.restrate.restaurant.RestaurantInfoFragmentArgs;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class ReviewListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
+        viewModel = new ViewModelProvider(getParentFragment()).get(ReviewListViewModel.class);
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_review_list, container, false);
@@ -56,15 +55,15 @@ public class ReviewListFragment extends Fragment {
         reviewListRV.setAdapter(adapter);
 
         viewModel.getRestaurantWithReviews().observe(getViewLifecycleOwner(), restaurant -> {
-            reviewList = new ArrayList<>(restaurant.reviews);
-            emptyList.setVisibility(View.INVISIBLE);
-            if(restaurant.reviews.size() == 0) {
-                emptyList.setVisibility(View.VISIBLE);
+            if (restaurant != null){
+                reviewList = new ArrayList<>(restaurant.reviews);
+                emptyList.setVisibility(View.INVISIBLE);
+                if(restaurant.reviews.size() == 0) {
+                    emptyList.setVisibility(View.VISIBLE);
+                }
+                adapter.notifyDataSetChanged();
             }
-            adapter.notifyDataSetChanged();
         });
-
-        viewModel.selectRestaurant(RestaurantInfoFragmentArgs.fromBundle(getParentFragment().getArguments()).getRestaurantId());
 
         return view;
     }
