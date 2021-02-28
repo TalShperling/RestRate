@@ -25,6 +25,7 @@ public class Model {
     public LiveData<List<Restaurant>> getAllRestaurants() {
         if (restaurantList == null) {
             restaurantList = modelSQL.getAllRestaurants();
+            refreshAllReviews(null);
             refreshAllRestaurants(null);
         }
 
@@ -98,12 +99,24 @@ public class Model {
         modelFirebase.upsertRestaurant(restToAdd, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant restaurant) {
-                refreshAllRestaurants(new GenericEventListenerWithNoParam() {
+                Review review = new Review(restaurant.getId(), getCurrentUser().getUid());
+                review.setCostMeter("2");
+                review.setDescription("aaaa this is the description");
+                review.setRate("4");
+                review.setUserDisplayName("vaisman hard coded");
+                modelFirebase.upsertReview(review, new GenericEventListenerWithParam<Review>() {
+
                     @Override
-                    public void onComplete() {
-                        listener.onComplete(restaurant);
+                    public void onComplete(Review data) {
+                        refreshAllReviews(new GenericEventListenerWithNoParam() {
+                            @Override
+                            public void onComplete() {
+                                listener.onComplete(restaurant);
+                            }
+                        });
                     }
                 });
+
             }
         });
     }
