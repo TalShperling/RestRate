@@ -125,30 +125,30 @@ public class ModelFirebase {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
-                        listener.onComplete();
+                        db.collection(REVIEW_DB_NAME).whereEqualTo("restaurantId", restaurant.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        document.getReference().update("isDeleted", true);
+                                    }
+
+                                    Log.d("TAG", "Reviews successfully deleted!");
+                                    listener.onComplete();
+                                } else {
+                                    Log.d("TAG", "Error deleting reviews: ", task.getException());
+                                }
+                            }
+                        });
+                        Log.d("TAG", "Restaurant successfully deleted!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error deleting document", e);
+                        Log.w("TAG", "Error deleting restaurant", e);
                     }
                 });
-
-        db.collection(REVIEW_DB_NAME).whereEqualTo("restaurantId", restaurant.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        document.getReference().update("isDeleted", true);
-                    }
-                } else {
-                    Log.d("TAG", "Error getting documents: ", task.getException());
-                }
-            }
-        });
-
     }
 
     public void getAllReviews(Long lastUpdated, final GenericEventListenerWithParam listener) {
