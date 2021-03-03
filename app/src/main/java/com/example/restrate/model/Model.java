@@ -14,18 +14,18 @@ import java.util.List;
 
 public class Model {
     public final static Model instance = new Model();
+    private final static SharedPreferences sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
     ModelFirebase modelFirebase = new ModelFirebase();
     ModelSQL modelSQL = new ModelSQL();
-    private final static SharedPreferences sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
+    LiveData<List<Restaurant>> restaurantList;
 
     private Model() {
     }
 
-    LiveData<List<Restaurant>> restaurantList;
-
     public LiveData<List<Restaurant>> getAllRestaurants() {
         if (restaurantList == null) {
             restaurantList = modelSQL.getAllRestaurants();
+            refreshAllReviews(null);
             refreshAllRestaurants(null);
         }
 
@@ -34,7 +34,7 @@ public class Model {
 
     public void refreshAllRestaurants(final GenericEventListenerWithNoParam listener) {
         // 1. get local last update date
-        long lastUpdated = sp.getLong("lastUpdated", 0);
+        long lastUpdated = sp.getLong("lastUpdatedRestaurants", 0);
 
         // 2. Get all updated records from firebase from the last update data
         modelFirebase.getAllRestaurants(lastUpdated, new GenericEventListenerWithParam<List<Restaurant>>() {
@@ -54,9 +54,36 @@ public class Model {
                 }
 
                 // 4. Update the local last update date
-                sp.edit().putLong("lastUpdated", lastU).commit();
+                sp.edit().putLong("lastUpdatedRestaurants", lastU).commit();
 
                 // 5. Return the updates data to the listeners
+                if (listener != null) {
+                    listener.onComplete();
+                }
+            }
+        });
+    }
+
+    public void refreshAllReviews(final GenericEventListenerWithNoParam listener) {
+        long lastUpdated = sp.getLong("lastUpdatedReviews", 0);
+
+        modelFirebase.getAllReviews(lastUpdated, new GenericEventListenerWithParam<List<Review>>() {
+            @Override
+            public void onComplete(List<Review> data) {
+                long lastU = 0;
+                for (Review review : data) {
+                    if (review.getIsDeleted()) {
+                        modelSQL.deleteReview(review, null);
+                    } else {
+                        modelSQL.upsertReview(review, null);
+                        if (review.getLastUpdated() > lastU) {
+                            lastU = review.getLastUpdated();
+                        }
+                    }
+                }
+
+                sp.edit().putLong("lastUpdatedReviews", lastU).commit();
+
                 if (listener != null) {
                     listener.onComplete();
                 }
@@ -68,17 +95,28 @@ public class Model {
         modelFirebase.getRestaurantById(id, listener);
     }
 
-
     public void upsertRestaurant(Restaurant restToAdd, GenericEventListenerWithParam<Restaurant> listener) {
         modelFirebase.upsertRestaurant(restToAdd, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant restaurant) {
-                refreshAllRestaurants(new GenericEventListenerWithNoParam() {
+                Review review = new Review(restaurant.getId(), getCurrentUser().getUid());
+                review.setCostMeter("2");
+                review.setDescription("aaaa this is the description");
+                review.setRate("4");
+                review.setUserDisplayName("vaisman hard coded");
+                modelFirebase.upsertReview(review, new GenericEventListenerWithParam<Review>() {
+
                     @Override
-                    public void onComplete() {
-                        listener.onComplete(restaurant);
+                    public void onComplete(Review data) {
+                        refreshAllReviews(new GenericEventListenerWithNoParam() {
+                            @Override
+                            public void onComplete() {
+                                listener.onComplete(restaurant);
+                            }
+                        });
                     }
                 });
+
             }
         });
     }
@@ -88,6 +126,40 @@ public class Model {
             @Override
             public void onComplete() {
                 refreshAllRestaurants(new GenericEventListenerWithNoParam() {
+                    @Override
+                    public void onComplete() {
+                        if (listener != null) {
+                            listener.onComplete();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public LiveData<RestaurantWithReviews> getRestaurantWithReviews(String id) {
+        return modelSQL.getRestaurantWithReviews(id);
+    }
+
+    public void upsertReview(Review reviewToAdd, GenericEventListenerWithParam<Review> listener) {
+        modelFirebase.upsertReview(reviewToAdd, new GenericEventListenerWithParam<Review>() {
+            @Override
+            public void onComplete(Review review) {
+                refreshAllReviews(new GenericEventListenerWithNoParam() {
+                    @Override
+                    public void onComplete() {
+                        listener.onComplete(review);
+                    }
+                });
+            }
+        });
+    }
+
+    public void deleteReview(Review review, GenericEventListenerWithNoParam listener) {
+        modelFirebase.deleteReview(review, new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                refreshAllReviews(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
                         if (listener != null) {
@@ -111,7 +183,7 @@ public class Model {
         return modelFirebase.isUserLoggedIn();
     }
 
-    public void register(String email, String password, String fullName,GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+    public void register(String email, String password, String fullName, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
         GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
             @Override
             public void onComplete() {
