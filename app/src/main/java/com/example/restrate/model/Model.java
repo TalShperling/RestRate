@@ -3,13 +3,13 @@ package com.example.restrate.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.restrate.MyApplication;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.EventListener;
 import java.util.List;
 
 public class Model {
@@ -183,7 +183,7 @@ public class Model {
         return modelFirebase.isUserLoggedIn();
     }
 
-    public void register(String email, String password, String fullName, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+    public void register(String email, String password, String fullName, Uri imageUri, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
         GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
             @Override
             public void onComplete() {
@@ -198,7 +198,25 @@ public class Model {
             }
         };
 
-        modelFirebase.register(email, password, fullName, onSuccess, onFail);
+        modelFirebase.register(email, password, fullName, imageUri, onSuccess, onFail);
+    }
+
+    public void updateUser(String email, String password, String fullName, Uri imageUri, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+        GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onSuccessListener.onComplete();
+            }
+        };
+
+        GenericEventListenerWithNoParam onFail = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onFailListener.onComplete();
+            }
+        };
+
+        modelFirebase.updateUser(email, password, fullName, imageUri, onSuccess, onFail);
     }
 
     public void login(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
@@ -218,6 +236,25 @@ public class Model {
         };
 
         modelFirebase.login(email, password, onSuccess, onFail);
+    }
+
+    public void reAuthenticate(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+
+        GenericEventListenerWithNoParam onSuccess = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onSuccessListener.onComplete();
+            }
+        };
+
+        GenericEventListenerWithNoParam onFail = new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onFailListener.onComplete();
+            }
+        };
+
+        modelFirebase.reAuthenticate(email, password, onSuccess, onFail);
     }
 
     public void logout(GenericEventListenerWithNoParam listener) {

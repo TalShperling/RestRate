@@ -13,11 +13,16 @@
     <string name="edit_restaurant">Edit Restaurant</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="my_profile">My Profile</string>
+    <string name="edit_my_profile">Edit My Profile</string>
+    <string name="edit">Edit</string>
     <string name="register">Register</string>
     <string name="register_full_name">Full name</string>
     <string name="register_email">Email</string>
     <string name="register_password">Password</string>
     <string name="register_repeat_password">Repeat password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
     <string name="register_register_btn">Register</string>
     <string name="register_cancel_btn">Cancel</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -27,4 +32,5 @@
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
     <string name="login_new"><u>New User?</u></string>
+    <string name="profile_my_reviews"><u>My reviews:</u></string>
 </resources>

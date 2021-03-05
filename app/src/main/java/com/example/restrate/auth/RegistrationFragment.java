@@ -1,8 +1,11 @@
 package com.example.restrate.auth;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -35,16 +38,16 @@ import static com.example.restrate.utils.Photos.SELECT_PICTURE_FROM_CAMERA;
 import static com.example.restrate.utils.Photos.SELECT_PICTURE_FROM_GALLERY;
 
 public class RegistrationFragment extends Fragment {
-    private View view;
+    View view;
     ImageView avatarImageView;
     ImageButton editImageButton;
-    private TextInputLayout fullNameET;
-    private TextInputLayout emailET;
-    private TextInputLayout passwordET;
-    private TextInputLayout repeatPasswordET;
-    private Button registerBtn;
-    private Button cancelBtn;
-    private ProgressBar registerPB;
+    TextInputLayout fullNameET;
+    TextInputLayout emailET;
+    TextInputLayout passwordET;
+    TextInputLayout repeatPasswordET;
+    Button registerBtn;
+    Button cancelBtn;
+    ProgressBar pb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,19 +65,19 @@ public class RegistrationFragment extends Fragment {
         repeatPasswordET = view.findViewById(R.id.register_repeat_password);
         registerBtn = view.findViewById(R.id.register_register_btn);
         cancelBtn = view.findViewById(R.id.register_cancel_btn);
-        registerPB = view.findViewById(R.id.register_pb);
+        pb = view.findViewById(R.id.register_pb);
 
-        registerPB.setVisibility(View.INVISIBLE);
+        pb.setVisibility(View.INVISIBLE);
 
         repeatPasswordET.getEditText().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
-                    register();
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    saveUser();
                     return true;
                 }
 
-                return  false;
+                return false;
             }
         });
 
@@ -97,47 +100,87 @@ public class RegistrationFragment extends Fragment {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                register();
+                saveUser();
             }
         });
 
         return view;
     }
 
-    private void register() {
-        registerPB.setVisibility(View.VISIBLE);
+    protected void saveUser() {
+        pb.setVisibility(View.VISIBLE);
         String email = emailET.getEditText().getText().toString();
         String password = passwordET.getEditText().getText().toString();
         String repeatPassword = repeatPasswordET.getEditText().getText().toString();
         String fullName = fullNameET.getEditText().getText().toString();
 
         if (verifyRegisterCredentials(fullName, email, password, repeatPassword)) {
-            Model.instance.register(email, password, fullName, new GenericEventListenerWithNoParam() {
+            BitmapDrawable drawable = (BitmapDrawable) avatarImageView.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+
+            Model.instance.uploadImage(bitmap, new GenericEventListenerWithParam<String>() {
                 @Override
-                public void onComplete() {
-                    Toast.makeText(getActivity(), "Register succeeded!", Toast.LENGTH_LONG).show();
-                    registerPB.setVisibility(View.INVISIBLE);
-                    navigateAfterRegister();
-                }
-            }, new GenericEventListenerWithNoParam() {
-                @Override
-                public void onComplete() {
-                    Toast.makeText(getActivity(), "An error occurred while trying to register, please try again", Toast.LENGTH_LONG).show();
-                    registerPB.setVisibility(View.INVISIBLE);
-                    navigateAfterRegister();
+                public void onComplete(String url) {
+                    if (url == null) {
+                        onRegisterUserOnServerFail();
+                    } else {
+                        saveUserOnServer(email, password, repeatPassword, fullName, url);
+                    }
                 }
             });
         } else {
-            registerPB.setVisibility(View.INVISIBLE);
+            pb.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void navigateAfterRegister() {
+    protected void saveUserOnServer(String email, String password, String repeatPassword, String fullName, String url) {
+        Model.instance.register(email, password, fullName, Uri.parse(url), new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onUserSaveSuccess(fullName);
+            }
+        }, new GenericEventListenerWithNoParam() {
+            @Override
+            public void onComplete() {
+                onUserSaveFail();
+            }
+        });
+    }
+
+    protected void onUserSaveSuccess(String fullName) {
+        Toast.makeText(getActivity(), "Welcome " + fullName + "!", Toast.LENGTH_LONG).show();
+        pb.setVisibility(View.INVISIBLE);
+        navigateAfterRegister();
+    }
+
+    protected void onUserSaveFail() {
+        Toast.makeText(getActivity(), "An error occurred while trying to register, please try again", Toast.LENGTH_LONG).show();
+        pb.setVisibility(View.INVISIBLE);
+        navigateAfterRegister();
+    }
+
+    protected void onRegisterUserOnServerFail() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Operation failed");
+        builder.setMessage("An error occurred during the process, please try again later");
+
+        builder.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                Utils.returnBack(view);
+            }
+        });
+
+        builder.show();
+    }
+
+    protected void navigateAfterRegister() {
         Utils.hideKeyboard(getActivity());
         Utils.returnBack(view);
     }
 
-    private boolean verifyRegisterCredentials(String fullName, String email, String password, String repeatPassword) {
+    protected boolean verifyRegisterCredentials(String fullName, String email, String password, String repeatPassword) {
         boolean isValid = true;
 
         if (fullName.equals("")) {
@@ -153,6 +196,12 @@ public class RegistrationFragment extends Fragment {
         } else {
             emailET.setErrorEnabled(false);
         }
+
+        return isValid && verifyPasswords(password, repeatPassword);
+    }
+
+    protected boolean verifyPasswords(String password, String repeatPassword) {
+        boolean isValid = true;
 
         if (password.equals("")) {
             isValid = false;
