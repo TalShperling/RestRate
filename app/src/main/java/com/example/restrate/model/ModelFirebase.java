@@ -298,7 +298,7 @@ public class ModelFirebase {
                 });
     }
 
-    public void update(String email, String password, String fullName, Uri imageURL, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
+    public void updateUser(String email, String password, String fullName, Uri imageURL, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()

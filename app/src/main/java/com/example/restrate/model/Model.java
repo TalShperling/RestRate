@@ -216,7 +216,7 @@ public class Model {
             }
         };
 
-        modelFirebase.update(email, password, fullName, imageUri, onSuccess, onFail);
+        modelFirebase.updateUser(email, password, fullName, imageUri, onSuccess, onFail);
     }
 
     public void login(String email, String password, GenericEventListenerWithNoParam onSuccessListener, GenericEventListenerWithNoParam onFailListener) {
