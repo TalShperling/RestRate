@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -88,7 +89,6 @@ public class RestaurantListFragment extends Fragment {
         });
 
 
-
         viewModel.getRestaurants().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
             @Override
             public void onChanged(List<Restaurant> restaurants) {
@@ -96,7 +96,7 @@ public class RestaurantListFragment extends Fragment {
                 filteredRestaurantList = new ArrayList<>(restaurants);
 
                 emptyList.setVisibility(View.INVISIBLE);
-                if(restaurants.size() == 0) {
+                if (restaurants.size() == 0) {
                     reloadData();
                     emptyList.setVisibility(View.VISIBLE);
                 }
@@ -112,6 +112,7 @@ public class RestaurantListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
 
     @Override
     public void onPause() {
@@ -152,6 +153,10 @@ public class RestaurantListFragment extends Fragment {
         });
     }
 
+    interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView restName;
         TextView restAddress;
@@ -165,6 +170,9 @@ public class RestaurantListFragment extends Fragment {
             restAddress = itemView.findViewById(R.id.restlistrow_address);
             restRating = itemView.findViewById(R.id.restlistrow_rating);
             restCostMeter = itemView.findViewById(R.id.restlistrow_cost_meter);
+
+            // needed to avoid star annoying changes on click
+            restRating.setOnClickListener(null);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -198,49 +206,8 @@ public class RestaurantListFragment extends Fragment {
         }
     }
 
-    interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> implements Filterable {
         private OnItemClickListener listener;
-
-        void setOnClickListener(OnItemClickListener listener) {
-            this.listener = listener;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, null);
-            MyViewHolder holder = new MyViewHolder(view, listener);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Restaurant restaurant = filteredRestaurantList.get(position);
-            holder.bindData(restaurant, position);
-        }
-
-        @Override
-        public int getItemCount() {
-            if(filteredRestaurantList != null) {
-                return filteredRestaurantList.size();
-            } else {
-                if (viewModel.getRestaurants().getValue() == null) {
-                    return 0;
-                }
-            }
-            return viewModel.getRestaurants().getValue().size();
-        }
-
-
-        @Override
-        public Filter getFilter() {
-            return listFilter;
-        }
-
         private Filter listFilter = new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
@@ -271,5 +238,40 @@ public class RestaurantListFragment extends Fragment {
                 notifyDataSetChanged();
             }
         };
+
+        void setOnClickListener(OnItemClickListener listener) {
+            this.listener = listener;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, null);
+            MyViewHolder holder = new MyViewHolder(view, listener);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            Restaurant restaurant = filteredRestaurantList.get(position);
+            holder.bindData(restaurant, position);
+        }
+
+        @Override
+        public int getItemCount() {
+            if (filteredRestaurantList != null) {
+                return filteredRestaurantList.size();
+            } else {
+                if (viewModel.getRestaurants().getValue() == null) {
+                    return 0;
+                }
+            }
+            return viewModel.getRestaurants().getValue().size();
+        }
+
+        @Override
+        public Filter getFilter() {
+            return listFilter;
+        }
     }
 }
