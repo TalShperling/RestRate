@@ -66,6 +66,7 @@ public class RestaurantInfoFragment extends Fragment {
 
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
         reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
+        reviewListViewModel.init();
 
 
         backBtn.setOnClickListener(new View.OnClickListener() {
