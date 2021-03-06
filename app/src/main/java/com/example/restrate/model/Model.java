@@ -11,6 +11,7 @@ import com.example.restrate.MyApplication;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Model {
     public final static Model instance = new Model();
@@ -137,8 +138,12 @@ public class Model {
         });
     }
 
-    public LiveData<RestaurantWithReviews> getRestaurantWithReviews(String id) {
-        return modelSQL.getRestaurantWithReviews(id);
+    public List<Review> getReviewsByRestaurantId(String id) throws ExecutionException, InterruptedException {
+        return modelSQL.getReviewsByRestaurantId(id);
+    }
+
+    public List<Review> getReviewsByUserId(String id) throws ExecutionException, InterruptedException {
+        return modelSQL.getReviewsByUserId(id);
     }
 
     public void upsertReview(Review reviewToAdd, GenericEventListenerWithParam<Review> listener) {

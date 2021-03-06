@@ -54,11 +54,11 @@ public class ReviewListFragment extends Fragment {
         adapter = new MyAdapter();
         reviewListRV.setAdapter(adapter);
 
-        viewModel.getRestaurantWithReviews().observe(getViewLifecycleOwner(), restaurant -> {
-            if (restaurant != null){
-                reviewList = new ArrayList<>(restaurant.reviews);
+        viewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
+            if (reviews != null){
+                reviewList = reviews;
                 emptyList.setVisibility(View.INVISIBLE);
-                if(restaurant.reviews.size() == 0) {
+                if(reviews.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
@@ -144,11 +144,11 @@ public class ReviewListFragment extends Fragment {
             if(reviewList != null) {
                 return reviewList.size();
             } else {
-                if (viewModel.getRestaurantWithReviews().getValue() == null || viewModel.getRestaurantWithReviews().getValue().reviews == null) {
+                if (viewModel.getReviews().getValue() == null) {
                     return 0;
                 }
             }
-            return viewModel.getRestaurantWithReviews().getValue().reviews.size();
+            return viewModel.getReviews().getValue().size();
         }
     }
 }
