@@ -100,26 +100,34 @@ public class Model {
         modelFirebase.upsertRestaurant(restToAdd, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant restaurant) {
-                Review review = new Review(restaurant.getId(), getCurrentUser().getUid());
-                review.setCostMeter("2");
-                review.setDescription("aaaa this is the description");
-                review.setRate("4");
-                review.setUserDisplayName("vaisman hard coded");
-                modelFirebase.upsertReview(review, new GenericEventListenerWithParam<Review>() {
-
+                refreshAllRestaurants(new GenericEventListenerWithNoParam() {
                     @Override
-                    public void onComplete(Review data) {
-                        refreshAllReviews(new GenericEventListenerWithNoParam() {
+                    public void onComplete() {
+                        Review review = new Review(restaurant.getId(), getCurrentUser().getUid());
+                        review.setCostMeter("1");
+                        review.setDescription("Check for description");
+                        review.setRate("2");
+                        review.setUserDisplayName("Check");
+                        upsertReview(review, new GenericEventListenerWithParam<Review>() {
+
                             @Override
-                            public void onComplete() {
-                                listener.onComplete(restaurant);
+                            public void onComplete(Review data) {
+                                refreshAllReviews(new GenericEventListenerWithNoParam() {
+                                    @Override
+                                    public void onComplete() {
+                                        listener.onComplete(restaurant);
+                                    }
+                                });
                             }
                         });
                     }
                 });
-
             }
         });
+    }
+
+    public void updateRestaurantScore(String id, double newRate, int newCostMeter, GenericEventListenerWithNoParam listener) {
+        modelFirebase.updateRestaurantScore(id, newRate, newCostMeter, listener);
     }
 
     public void deleteRestaurant(Restaurant restaurant, GenericEventListenerWithNoParam listener) {
@@ -129,9 +137,15 @@ public class Model {
                 refreshAllRestaurants(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
-                        if (listener != null) {
-                            listener.onComplete();
-                        }
+                        refreshAllReviews(new GenericEventListenerWithNoParam() {
+                            @Override
+                            public void onComplete() {
+                                if (listener != null) {
+                                    listener.onComplete();
+                                }
+                            }
+                        });
+
                     }
                 });
             }
@@ -146,6 +160,32 @@ public class Model {
         return modelSQL.getReviewsByUserId(id);
     }
 
+    private RestaurantScore calculateScores(Review review) {
+        String restaurantId = review.getRestaurantId();
+        int sumOfCostMeter = 0;
+        int sumOfRate = 0;
+
+        try {
+            List<Review> reviews = getReviewsByRestaurantId(restaurantId);
+
+            if (reviews.size() != 0) {
+                int numberOfReviews = reviews.size();
+
+                for (Review rev : reviews) {
+                    sumOfCostMeter += Integer.parseInt(rev.getCostMeter());
+                    sumOfRate += Integer.parseInt(rev.getRate());
+                }
+
+                return new RestaurantScore(sumOfCostMeter / numberOfReviews, sumOfRate / numberOfReviews);
+            } else {
+                return new RestaurantScore(0, 0);
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return new RestaurantScore(0, 0);
+        }
+    }
+
     public void upsertReview(Review reviewToAdd, GenericEventListenerWithParam<Review> listener) {
         modelFirebase.upsertReview(reviewToAdd, new GenericEventListenerWithParam<Review>() {
             @Override
@@ -153,7 +193,19 @@ public class Model {
                 refreshAllReviews(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
-                        listener.onComplete(review);
+                        RestaurantScore restaurantScore = calculateScores(review);
+
+                        updateRestaurantScore(review.getRestaurantId(), restaurantScore.getRate(), restaurantScore.getCostMeter(), new GenericEventListenerWithNoParam() {
+                            @Override
+                            public void onComplete() {
+                                refreshAllRestaurants(new GenericEventListenerWithNoParam() {
+                                    @Override
+                                    public void onComplete() {
+                                        listener.onComplete(review);
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -167,9 +219,16 @@ public class Model {
                 refreshAllReviews(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
-                        if (listener != null) {
-                            listener.onComplete();
-                        }
+                        RestaurantScore restaurantScore = calculateScores(review);
+
+                        updateRestaurantScore(review.getRestaurantId(), restaurantScore.getRate(), restaurantScore.getCostMeter(), new GenericEventListenerWithNoParam() {
+                            @Override
+                            public void onComplete() {
+                                if (listener != null) {
+                                    listener.onComplete();
+                                }
+                            }
+                        });
                     }
                 });
             }
