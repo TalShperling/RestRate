@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 public class ReviewListViewModel extends ViewModel {
     private final MutableLiveData<String> restaurantId = new MutableLiveData<>();
     private final MutableLiveData<String> userId = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> showAddOption = new MutableLiveData<>(true);
 
     private final MediatorLiveData<List<Review>> reviews = new MediatorLiveData<>();
 
@@ -42,7 +43,15 @@ public class ReviewListViewModel extends ViewModel {
         userId.setValue(id);
     }
 
+    public void setIsAddShown(boolean isShown) {
+        showAddOption.setValue(isShown);
+    }
+
     public LiveData<List<Review>> getReviews() {
         return reviews;
+    }
+
+    public LiveData<Boolean> isAddShown() {
+        return showAddOption;
     }
 }
