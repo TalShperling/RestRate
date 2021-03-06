@@ -5,14 +5,35 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ModelSQL {
     public LiveData<List<Restaurant>> getAllRestaurants() {
         return AppLocalDb.db.restaurantDAO().getAll();
     }
 
-    public LiveData<RestaurantWithReviews> getRestaurantWithReviews(String id) {
-        return AppLocalDb.db.restaurantDAO().getRestaurantWithReviews(id);
+    public List<Review> getReviewsByRestaurantId(String id) throws ExecutionException, InterruptedException {
+        class MyAsyncTask extends AsyncTask<Void, Void, List<Review>> {
+            @Override
+            protected List<Review> doInBackground(Void... voids) {
+                return AppLocalDb.db.reviewDAO().getReviewsByRestaurantId(id);
+            }
+        }
+
+        MyAsyncTask task = new MyAsyncTask();
+        return task.execute().get();
+    }
+
+    public List<Review> getReviewsByUserId(String id) throws ExecutionException, InterruptedException {
+        class MyAsyncTask extends AsyncTask<Void, Void, List<Review>> {
+            @Override
+            protected List<Review> doInBackground(Void... voids) {
+                return AppLocalDb.db.reviewDAO().getReviewsByUserId(id);
+            }
+        }
+
+        MyAsyncTask task = new MyAsyncTask();
+        return task.execute().get();
     }
 
     public void upsertRestaurant(Restaurant restToAdd, GenericEventListenerWithNoParam listener) {
