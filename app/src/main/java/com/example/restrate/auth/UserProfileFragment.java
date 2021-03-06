@@ -16,10 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.restrate.R;
 import com.example.restrate.model.Model;
+import com.example.restrate.review.ReviewListFragment;
+import com.example.restrate.review.ReviewListViewModel;
 import com.squareup.picasso.Picasso;
 
 public class UserProfileFragment extends Fragment {
@@ -27,6 +31,7 @@ public class UserProfileFragment extends Fragment {
     ImageView userImage;
     TextView userName;
     ProgressBar pb;
+    ReviewListViewModel reviewListViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,20 +49,27 @@ public class UserProfileFragment extends Fragment {
         userName = view.findViewById(R.id.user_profile_name);
         pb = view.findViewById(R.id.user_profile_pb);
 
+        Fragment reviewsFregment = new ReviewListFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.user_profile_reviews_container, reviewsFregment).commit();
+
+        reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
+        reviewListViewModel.init();
+
         pb.setVisibility(View.VISIBLE);
 
         bindData();
+
 
         return view;
     }
 
     private void bindData() {
-        // TODO: add the reviews connection
-        // Model.instance.getCurrentUserReviews();
-
         userName.setText(Model.instance.getCurrentUser().getDisplayName());
         Uri imageURL = Model.instance.getCurrentUser().getPhotoUrl();
         loadImage(imageURL.toString());
+        reviewListViewModel.selectUser(Model.instance.getCurrentUser().getUid());
+        reviewListViewModel.setIsAddShown(false);
         pb.setVisibility(View.INVISIBLE);
     }
 
