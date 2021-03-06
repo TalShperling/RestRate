@@ -104,9 +104,9 @@ public class Model {
                     @Override
                     public void onComplete() {
                         Review review = new Review(restaurant.getId(), getCurrentUser().getUid());
-                        review.setCostMeter("3");
+                        review.setCostMeter("1");
                         review.setDescription("Check for description");
-                        review.setRate("5");
+                        review.setRate("2");
                         review.setUserDisplayName("Check");
                         upsertReview(review, new GenericEventListenerWithParam<Review>() {
 
@@ -137,9 +137,15 @@ public class Model {
                 refreshAllRestaurants(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
-                        if (listener != null) {
-                            listener.onComplete();
-                        }
+                        refreshAllReviews(new GenericEventListenerWithNoParam() {
+                            @Override
+                            public void onComplete() {
+                                if (listener != null) {
+                                    listener.onComplete();
+                                }
+                            }
+                        });
+
                     }
                 });
             }
@@ -159,18 +165,23 @@ public class Model {
         int sumOfCostMeter = 0;
         int sumOfRate = 0;
 
-        RestaurantWithReviews restaurantWithReviews = getRestaurantWithReviews(restaurantId).getValue();
+        try {
+            List<Review> reviews = getReviewsByRestaurantId(restaurantId);
 
-        if(restaurantWithReviews != null) {
-            int numberOfReviews = restaurantWithReviews.reviews.size();
+            if (reviews.size() != 0) {
+                int numberOfReviews = reviews.size();
 
-            for (Review rev : restaurantWithReviews.reviews) {
-                sumOfCostMeter += Integer.parseInt(rev.getCostMeter());
-                sumOfRate += Integer.parseInt(rev.getRate());
+                for (Review rev : reviews) {
+                    sumOfCostMeter += Integer.parseInt(rev.getCostMeter());
+                    sumOfRate += Integer.parseInt(rev.getRate());
+                }
+
+                return new RestaurantScore(sumOfCostMeter / numberOfReviews, sumOfRate / numberOfReviews);
+            } else {
+                return new RestaurantScore(0, 0);
             }
-
-            return new RestaurantScore(sumOfCostMeter / numberOfReviews, sumOfRate / numberOfReviews);
-        } else {
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
             return new RestaurantScore(0, 0);
         }
     }
@@ -187,7 +198,12 @@ public class Model {
                         updateRestaurantScore(review.getRestaurantId(), restaurantScore.getRate(), restaurantScore.getCostMeter(), new GenericEventListenerWithNoParam() {
                             @Override
                             public void onComplete() {
-                                listener.onComplete(review);
+                                refreshAllRestaurants(new GenericEventListenerWithNoParam() {
+                                    @Override
+                                    public void onComplete() {
+                                        listener.onComplete(review);
+                                    }
+                                });
                             }
                         });
                     }
