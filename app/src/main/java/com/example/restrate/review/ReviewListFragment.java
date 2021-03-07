@@ -115,10 +115,17 @@ public class ReviewListFragment extends Fragment {
         });
 
         viewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
-            if (reviews != null){
+            if (reviews != null) {
                 reviewList = reviews;
+                boolean showAdd = true;
+                for (Review review : reviews) {
+                    if (review.getUserId().equals(Model.instance.getCurrentUser().getUid())) {
+                        showAdd = false;
+                    }
+                }
+                viewModel.setIsAddShown(showAdd);
                 emptyList.setVisibility(View.INVISIBLE);
-                if(reviews.size() == 0) {
+                if (reviews.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
