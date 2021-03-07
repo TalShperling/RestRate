@@ -383,11 +383,10 @@ public class ModelFirebase {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Review rev = null;
+                        Review rev = new Review("", "");
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                rev = new Review();
                                 rev.fromMap(document.getData());
                             } else {
                                 Log.d("TAG", "No such document");

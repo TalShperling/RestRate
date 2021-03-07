@@ -65,7 +65,6 @@ public class RestaurantInfoFragment extends Fragment {
         reviewListViewModel.init();
 
         ReviewListFragment reviewsFragment = new ReviewListFragment();
-        reviewsFragment.setRestaurantId(restaurantId);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.restinfo_reviews_container, reviewsFragment).commit();
 

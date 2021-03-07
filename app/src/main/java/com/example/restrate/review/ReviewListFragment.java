@@ -30,7 +30,6 @@ import static com.example.restrate.Utils.costMeterTextConverter;
 public class ReviewListFragment extends Fragment {
     ReviewListViewModel viewModel;
     List<Review> reviewList;
-    String restaurantId;
 
     TextView emptyList;
     FloatingActionButton addReviewBtn;
@@ -53,7 +52,8 @@ public class ReviewListFragment extends Fragment {
         addReviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToAddReviewFragment direction = RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToAddReviewFragment(restaurantId);
+                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToAddReviewFragment direction =
+                        RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToAddReviewFragment(viewModel.getRestaurantId());
                 Navigation.findNavController(view).navigate(direction);
             }
         });
@@ -67,8 +67,13 @@ public class ReviewListFragment extends Fragment {
         adapter.setOnClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                String id = reviewList.get(position).getReviewId();
-                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToEditReviewFragment direction = RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToEditReviewFragment(id, restaurantId);
+                String reviewId = reviewList.get(position).getReviewId();
+                String restaurantId = reviewList.get(position).getRestaurantId();
+
+                // TODO: add different direction and change to ReviewListFragmentToEditReviewFragment
+                // in that way you will be able to navigate from profile and from restaurant simultaneously
+                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToEditReviewFragment direction =
+                        RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToEditReviewFragment(reviewId, restaurantId);
                 Navigation.findNavController(view).navigate(direction);
             }
         });
@@ -91,10 +96,6 @@ public class ReviewListFragment extends Fragment {
         return view;
     }
 
-    public void setRestaurantId(String restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +105,10 @@ public class ReviewListFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Utils.hideKeyboard(getActivity());
+    }
+
+    interface OnItemClickListener {
+        void onItemClick(int position);
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -140,10 +145,6 @@ public class ReviewListFragment extends Fragment {
             reviewRating.setRating(Float.parseFloat(review.getRate()));
             reviewCostMeter.setText(costMeterTextConverter(review.getCostMeter()));
         }
-    }
-
-    interface OnItemClickListener {
-        void onItemClick(int position);
     }
 
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {

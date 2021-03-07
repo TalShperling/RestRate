@@ -54,4 +54,6 @@ public class ReviewListViewModel extends ViewModel {
     public LiveData<Boolean> isAddShown() {
         return showAddOption;
     }
+
+    public String getRestaurantId() { return restaurantId.getValue(); }
 }
