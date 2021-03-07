@@ -1,9 +1,12 @@
 package com.example.restrate.review;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -17,12 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.restrate.R;
 import com.example.restrate.Utils;
+import com.example.restrate.model.GenericEventListenerWithNoParam;
+import com.example.restrate.model.Model;
 import com.example.restrate.model.Review;
-import com.example.restrate.restaurant.RestaurantInfoFragmentDirections;
-import com.example.restrate.restaurant.RestaurantListFragmentDirections;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.restrate.Utils.costMeterTextConverter;
@@ -64,9 +66,9 @@ public class ReviewListFragment extends Fragment {
         adapter = new MyAdapter();
         reviewListRV.setAdapter(adapter);
 
-        adapter.setOnClickListener(new OnItemClickListener() {
+        adapter.setOnEditClickListener(new OnClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onClick(int position) {
                 String reviewId = reviewList.get(position).getReviewId();
                 String restaurantId = reviewList.get(position).getRestaurantId();
 
@@ -77,11 +79,46 @@ public class ReviewListFragment extends Fragment {
             }
         });
 
+        adapter.setOnDeleteClickListener(new OnClickListener() {
+            @Override
+            public void onClick(int position) {
+                this.deleteReview(reviewList.get(position));
+            }
+
+            private void deleteReview(Review review) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Delete Review");
+                builder.setMessage("Are you sure you want to delete this review?");
+
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Model.instance.deleteReview(review, new GenericEventListenerWithNoParam() {
+                            @Override
+                            public void onComplete() {
+                                dialogInterface.dismiss();
+                                Utils.returnBack(view);
+                            }
+                        });
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
         viewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
-            if (reviews != null) {
+            if (reviews != null){
                 reviewList = reviews;
                 emptyList.setVisibility(View.INVISIBLE);
-                if (reviews.size() == 0) {
+                if(reviews.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
@@ -106,8 +143,8 @@ public class ReviewListFragment extends Fragment {
         Utils.hideKeyboard(getActivity());
     }
 
-    interface OnItemClickListener {
-        void onItemClick(int position);
+    interface OnClickListener {
+        void onClick(int position);
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -115,22 +152,38 @@ public class ReviewListFragment extends Fragment {
         TextView reviewDescription;
         RatingBar reviewRating;
         TextView reviewCostMeter;
+        ImageButton editReviewBtn;
+        ImageButton deleteReviewBtn;
         int position;
 
-        public MyViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+        public MyViewHolder(@NonNull View itemView, final OnClickListener editClickListener, final OnClickListener deleteClickListener) {
             super(itemView);
             reviewerName = itemView.findViewById(R.id.review_listrow_username);
             reviewDescription = itemView.findViewById(R.id.review_listrow_desc);
             reviewRating = itemView.findViewById(R.id.review_listrow_rating);
             reviewCostMeter = itemView.findViewById(R.id.review_listrow_cost_meter);
+            editReviewBtn = itemView.findViewById(R.id.review_listrow_edit_btn);
+            deleteReviewBtn = itemView.findViewById(R.id.review_listrow_delete_btn);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            editReviewBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (listener != null) {
+                    if (editClickListener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
+                            editClickListener.onClick(position);
+                        }
+                    }
+                }
+            });
+
+            deleteReviewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (deleteClickListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            deleteClickListener.onClick(position);
                         }
                     }
                 }
@@ -143,21 +196,28 @@ public class ReviewListFragment extends Fragment {
             reviewDescription.setText(review.getDescription());
             reviewRating.setRating(Float.parseFloat(review.getRate()));
             reviewCostMeter.setText(costMeterTextConverter(review.getCostMeter()));
+            deleteReviewBtn.setVisibility(review.getUserId().equals(Model.instance.getCurrentUser().getUid()) ? View.VISIBLE : View.INVISIBLE);
+            editReviewBtn.setVisibility(review.getUserId().equals(Model.instance.getCurrentUser().getUid()) ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private OnItemClickListener listener;
+        private OnClickListener editClickListener;
+        private OnClickListener deleteClickListener;
 
-        void setOnClickListener(OnItemClickListener listener) {
-            this.listener = listener;
+        void setOnEditClickListener(OnClickListener listener) {
+            this.editClickListener = listener;
+        }
+
+        void setOnDeleteClickListener(OnClickListener listener) {
+            this.deleteClickListener = listener;
         }
 
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.review_list_row, parent, false);
-            MyViewHolder holder = new MyViewHolder(view, listener);
+            MyViewHolder holder = new MyViewHolder(view, editClickListener, deleteClickListener);
             return holder;
         }
 
