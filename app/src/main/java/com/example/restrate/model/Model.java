@@ -103,23 +103,7 @@ public class Model {
                 refreshAllRestaurants(new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
-                        Review review = new Review(restaurant.getId(), getCurrentUser().getUid());
-                        review.setCostMeter("1");
-                        review.setDescription("Check for description");
-                        review.setRate("2");
-                        review.setUserDisplayName("Check");
-                        upsertReview(review, new GenericEventListenerWithParam<Review>() {
-
-                            @Override
-                            public void onComplete(Review data) {
-                                refreshAllReviews(new GenericEventListenerWithNoParam() {
-                                    @Override
-                                    public void onComplete() {
-                                        listener.onComplete(restaurant);
-                                    }
-                                });
-                            }
-                        });
+                        listener.onComplete(restaurant);
                     }
                 });
 
