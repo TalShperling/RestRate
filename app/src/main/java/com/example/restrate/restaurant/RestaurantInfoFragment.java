@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -42,6 +43,13 @@ public class RestaurantInfoFragment extends Fragment {
     ReviewListViewModel reviewListViewModel;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
+        reviewListViewModel.init();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -60,14 +68,11 @@ public class RestaurantInfoFragment extends Fragment {
         pb = view.findViewById(R.id.restinfo_pb);
         pb.setVisibility(View.VISIBLE);
 
-        Fragment reviewsFregment = new ReviewListFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.restinfo_reviews_container, reviewsFregment).commit();
-
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
-        reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
-        reviewListViewModel.init();
 
+        ReviewListFragment reviewsFragment = new ReviewListFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.restinfo_reviews_container, reviewsFragment).commit();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

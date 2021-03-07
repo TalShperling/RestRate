@@ -27,4 +27,14 @@ public class Utils {
     public static boolean isValidEmail(String target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
+
+    public static String costMeterTextConverter(String costMeter) {
+        String costMeterStringified = "";
+
+        for (int i = 0; i < Integer.parseInt(costMeter); i++) {
+            costMeterStringified = costMeterStringified.concat("$");
+        }
+
+        return costMeterStringified;
+    }
 }

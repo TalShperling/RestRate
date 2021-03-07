@@ -18,10 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.restrate.R;
 import com.example.restrate.Utils;
 import com.example.restrate.model.Review;
+import com.example.restrate.restaurant.RestaurantInfoFragmentDirections;
+import com.example.restrate.restaurant.RestaurantListFragmentDirections;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.restrate.Utils.costMeterTextConverter;
 
 public class ReviewListFragment extends Fragment {
     ReviewListViewModel viewModel;
@@ -45,8 +49,14 @@ public class ReviewListFragment extends Fragment {
 
         reviewListRV.setHasFixedSize(true);
 
-        // TODO: create add review fragment
-        addReviewBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_restaurantListFragment_to_addRestaurantFragment));
+        addReviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("restaurantId", viewModel.getRestaurantId());
+                Navigation.findNavController(view).navigate(R.id.addReviewFragment, bundle);
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         reviewListRV.setLayoutManager(layoutManager);
@@ -54,11 +64,24 @@ public class ReviewListFragment extends Fragment {
         adapter = new MyAdapter();
         reviewListRV.setAdapter(adapter);
 
+        adapter.setOnClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String reviewId = reviewList.get(position).getReviewId();
+                String restaurantId = reviewList.get(position).getRestaurantId();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("restaurantId", restaurantId);
+                bundle.putString("reviewId", reviewId);
+                Navigation.findNavController(view).navigate(R.id.editReviewFragment, bundle);
+            }
+        });
+
         viewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
-            if (reviews != null){
+            if (reviews != null) {
                 reviewList = reviews;
                 emptyList.setVisibility(View.INVISIBLE);
-                if(reviews.size() == 0) {
+                if (reviews.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
@@ -77,11 +100,14 @@ public class ReviewListFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
         Utils.hideKeyboard(getActivity());
+    }
+
+    interface OnItemClickListener {
+        void onItemClick(int position);
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -97,16 +123,18 @@ public class ReviewListFragment extends Fragment {
             reviewDescription = itemView.findViewById(R.id.review_listrow_desc);
             reviewRating = itemView.findViewById(R.id.review_listrow_rating);
             reviewCostMeter = itemView.findViewById(R.id.review_listrow_cost_meter);
-        }
 
-        private String costMeterTextConverter(String costMeter) {
-            String costMeterStringified = "";
-
-            for (int i = 0; i < Integer.parseInt(costMeter); i++) {
-                costMeterStringified = costMeterStringified.concat("$");
-            }
-
-            return costMeterStringified;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
 
         private void bindData(Review review, int position) {
@@ -116,10 +144,6 @@ public class ReviewListFragment extends Fragment {
             reviewRating.setRating(Float.parseFloat(review.getRate()));
             reviewCostMeter.setText(costMeterTextConverter(review.getCostMeter()));
         }
-    }
-
-    interface OnItemClickListener {
-        void onItemClick(int position);
     }
 
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
@@ -145,7 +169,7 @@ public class ReviewListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if(reviewList != null) {
+            if (reviewList != null) {
                 return reviewList.size();
             } else {
                 if (viewModel.getReviews().getValue() == null) {

@@ -117,21 +117,19 @@ public class ModelFirebase {
     }
 
     public void updateRestaurantScore(String id, double newRate, int newCostMeter, GenericEventListenerWithNoParam listener) {
-        FirebaseFirestore.getInstance().collection(RESTAURANT_DB_NAME).document(id).update(
-                "rate", String.valueOf(newRate),
-                "costMeter", String.valueOf(newCostMeter)
-        ).addOnSuccessListener(new OnSuccessListener() {
+        getRestaurantById(id, new GenericEventListenerWithParam<Restaurant>() {
             @Override
-            public void onSuccess(Object o) {
-                listener.onComplete();
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
+            public void onComplete(Restaurant restToSave) {
+                restToSave.setRate(String.valueOf(newRate));
+                restToSave.setCostMeter(String.valueOf(newCostMeter));
+                upsertRestaurant(restToSave, new GenericEventListenerWithParam<Restaurant>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error updating restaurant rate", e);
+                    public void onComplete(Restaurant data) {
+                        listener.onComplete();
                     }
                 });
+            }
+        });
     }
 
     public void deleteRestaurant(Restaurant restaurant, GenericEventListenerWithNoParam listener) {
@@ -374,5 +372,30 @@ public class ModelFirebase {
     public void logout(GenericEventListenerWithNoParam listener) {
         FirebaseAuth.getInstance().signOut();
         listener.onComplete();
+    }
+
+    public void getReviewById(String id, GenericEventListenerWithParam<Review> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(REVIEW_DB_NAME)
+                .document(id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Review rev = new Review("", "");
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                rev.fromMap(document.getData());
+                            } else {
+                                Log.d("TAG", "No such document");
+                            }
+                        } else {
+                            Log.d("TAG", "get failed with ", task.getException());
+                        }
+                        listener.onComplete(rev);
+                    }
+                });
     }
 }

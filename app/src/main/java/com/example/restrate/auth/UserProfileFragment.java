@@ -37,6 +37,8 @@ public class UserProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
+        reviewListViewModel.init();
     }
 
     @Override
@@ -49,17 +51,13 @@ public class UserProfileFragment extends Fragment {
         userName = view.findViewById(R.id.user_profile_name);
         pb = view.findViewById(R.id.user_profile_pb);
 
-        Fragment reviewsFregment = new ReviewListFragment();
+        Fragment reviewsFragment = new ReviewListFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.user_profile_reviews_container, reviewsFregment).commit();
-
-        reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
-        reviewListViewModel.init();
+        transaction.replace(R.id.user_profile_reviews_container, reviewsFragment).commit();
 
         pb.setVisibility(View.VISIBLE);
 
         bindData();
-
 
         return view;
     }

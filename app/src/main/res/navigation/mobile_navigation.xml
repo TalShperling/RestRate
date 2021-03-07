@@ -101,4 +101,25 @@
         app:destination="@id/restaurantListFragment"
         app:popUpTo="@id/mobile_navigation"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/addReviewFragment"
+        android:name="com.example.restrate.review.AddReviewFragment"
+        android:label="@string/add_review"
+        tools:layout="@layout/fragment_add_review" >
+        <argument
+            android:name="restaurantId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editReviewFragment"
+        android:name="com.example.restrate.review.EditReviewFragment"
+        android:label="@string/edit_review"
+        tools:layout="@layout/fragment_edit_review">
+        <argument
+            android:name="reviewId"
+            app:argType="string" />
+        <argument
+            android:name="restaurantId"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -35,6 +35,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.restrate.Utils.costMeterTextConverter;
+
 public class RestaurantListFragment extends Fragment {
     RestaurantListViewModel viewModel;
     List<Restaurant> FullRestaurantList;
@@ -147,9 +149,11 @@ public class RestaurantListFragment extends Fragment {
         pb.setVisibility(View.VISIBLE);
         addRestaurantBtn.setEnabled(false);
         Model.instance.refreshAllRestaurants(() -> {
-            pb.setVisibility(View.INVISIBLE);
-            addRestaurantBtn.setEnabled(true);
-            sref.setRefreshing(false);
+            Model.instance.refreshAllReviews(() -> {
+                pb.setVisibility(View.INVISIBLE);
+                addRestaurantBtn.setEnabled(true);
+                sref.setRefreshing(false);
+            });
         });
     }
 
@@ -173,6 +177,7 @@ public class RestaurantListFragment extends Fragment {
 
             // needed to avoid star annoying changes on click
             restRating.setOnClickListener(null);
+            restAddress.setSingleLine(false);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -187,15 +192,7 @@ public class RestaurantListFragment extends Fragment {
             });
         }
 
-        private String costMeterTextConverter(String costMeter) {
-            String costMeterStringified = "";
 
-            for (int i = 0; i < Integer.parseInt(costMeter); i++) {
-                costMeterStringified = costMeterStringified.concat("$");
-            }
-
-            return costMeterStringified;
-        }
 
         private void bindData(Restaurant restaurant, int position) {
             this.position = position;
@@ -246,7 +243,7 @@ public class RestaurantListFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, null);
+            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, parent, false);
             MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }
