@@ -146,6 +146,10 @@ public class Model {
         return modelSQL.getReviewsByUserId(id);
     }
 
+    public void getReviewById(String id, GenericEventListenerWithParam<Review> listener) {
+        modelFirebase.getReviewById(id, listener);
+    }
+
     public void upsertReview(Review reviewToAdd, GenericEventListenerWithParam<Review> listener) {
         modelFirebase.upsertReview(reviewToAdd, new GenericEventListenerWithParam<Review>() {
             @Override

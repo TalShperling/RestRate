@@ -35,6 +35,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.restrate.Utils.costMeterTextConverter;
+
 public class RestaurantListFragment extends Fragment {
     RestaurantListViewModel viewModel;
     List<Restaurant> FullRestaurantList;
@@ -187,15 +189,7 @@ public class RestaurantListFragment extends Fragment {
             });
         }
 
-        private String costMeterTextConverter(String costMeter) {
-            String costMeterStringified = "";
 
-            for (int i = 0; i < Integer.parseInt(costMeter); i++) {
-                costMeterStringified = costMeterStringified.concat("$");
-            }
-
-            return costMeterStringified;
-        }
 
         private void bindData(Restaurant restaurant, int position) {
             this.position = position;

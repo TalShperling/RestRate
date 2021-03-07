@@ -27,6 +27,8 @@ public class Review {
     private Long lastUpdated;
     private Boolean isDeleted = false;
 
+    public Review() {}
+
     public Review(@NonNull String restaurantId, @NonNull String userId) {
         this.reviewId = restaurantId + '-' + userId;
         this.restaurantId = restaurantId;

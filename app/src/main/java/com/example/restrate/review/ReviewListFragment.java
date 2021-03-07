@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.restrate.R;
 import com.example.restrate.Utils;
 import com.example.restrate.model.Review;
+import com.example.restrate.restaurant.RestaurantInfoFragmentDirections;
+import com.example.restrate.restaurant.RestaurantListFragmentDirections;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
 public class ReviewListFragment extends Fragment {
     ReviewListViewModel viewModel;
     List<Review> reviewList;
+    String restaurantId;
 
     TextView emptyList;
     FloatingActionButton addReviewBtn;
@@ -45,8 +48,13 @@ public class ReviewListFragment extends Fragment {
 
         reviewListRV.setHasFixedSize(true);
 
-        // TODO: create add review fragment
-        addReviewBtn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_restaurantListFragment_to_addRestaurantFragment));
+        addReviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToAddReviewFragment direction = RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToAddReviewFragment(restaurantId);
+                Navigation.findNavController(view).navigate(direction);
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         reviewListRV.setLayoutManager(layoutManager);
@@ -55,10 +63,10 @@ public class ReviewListFragment extends Fragment {
         reviewListRV.setAdapter(adapter);
 
         viewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
-            if (reviews != null){
+            if (reviews != null) {
                 reviewList = reviews;
                 emptyList.setVisibility(View.INVISIBLE);
-                if(reviews.size() == 0) {
+                if (reviews.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
@@ -68,11 +76,14 @@ public class ReviewListFragment extends Fragment {
         return view;
     }
 
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
     @Override
     public void onPause() {
@@ -141,7 +152,7 @@ public class ReviewListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if(reviewList != null) {
+            if (reviewList != null) {
                 return reviewList.size();
             } else {
                 if (viewModel.getReviews().getValue() == null) {

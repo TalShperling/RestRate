@@ -358,4 +358,30 @@ public class ModelFirebase {
         FirebaseAuth.getInstance().signOut();
         listener.onComplete();
     }
+
+    public void getReviewById(String id, GenericEventListenerWithParam<Review> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(REVIEW_DB_NAME)
+                .document(id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Review rev = null;
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                rev = new Review();
+                                rev.fromMap(document.getData());
+                            } else {
+                                Log.d("TAG", "No such document");
+                            }
+                        } else {
+                            Log.d("TAG", "get failed with ", task.getException());
+                        }
+                        listener.onComplete(rev);
+                    }
+                });
+    }
 }

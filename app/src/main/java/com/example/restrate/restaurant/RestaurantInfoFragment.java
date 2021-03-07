@@ -60,14 +60,14 @@ public class RestaurantInfoFragment extends Fragment {
         pb = view.findViewById(R.id.restinfo_pb);
         pb.setVisibility(View.VISIBLE);
 
-        Fragment reviewsFregment = new ReviewListFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.restinfo_reviews_container, reviewsFregment).commit();
-
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
         reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
         reviewListViewModel.init();
 
+        ReviewListFragment reviewsFragment = new ReviewListFragment();
+        reviewsFragment.setRestaurantId(restaurantId);
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.restinfo_reviews_container, reviewsFragment).commit();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
