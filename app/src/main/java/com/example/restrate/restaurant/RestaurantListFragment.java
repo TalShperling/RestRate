@@ -149,9 +149,11 @@ public class RestaurantListFragment extends Fragment {
         pb.setVisibility(View.VISIBLE);
         addRestaurantBtn.setEnabled(false);
         Model.instance.refreshAllRestaurants(() -> {
-            pb.setVisibility(View.INVISIBLE);
-            addRestaurantBtn.setEnabled(true);
-            sref.setRefreshing(false);
+            Model.instance.refreshAllReviews(() -> {
+                pb.setVisibility(View.INVISIBLE);
+                addRestaurantBtn.setEnabled(true);
+                sref.setRefreshing(false);
+            });
         });
     }
 
@@ -175,6 +177,7 @@ public class RestaurantListFragment extends Fragment {
 
             // needed to avoid star annoying changes on click
             restRating.setOnClickListener(null);
+            restAddress.setSingleLine(false);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -240,7 +243,7 @@ public class RestaurantListFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, null);
+            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, parent, false);
             MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }

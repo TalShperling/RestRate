@@ -51,14 +51,13 @@ public class UserProfileFragment extends Fragment {
         userName = view.findViewById(R.id.user_profile_name);
         pb = view.findViewById(R.id.user_profile_pb);
 
-        Fragment reviewsFregment = new ReviewListFragment();
+        Fragment reviewsFragment = new ReviewListFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.user_profile_reviews_container, reviewsFregment).commit();
+        transaction.replace(R.id.user_profile_reviews_container, reviewsFragment).commit();
 
         pb.setVisibility(View.VISIBLE);
 
         bindData();
-
 
         return view;
     }
