@@ -164,7 +164,7 @@ public class Model {
     private RestaurantScore calculateScores(Review review) {
         String restaurantId = review.getRestaurantId();
         int sumOfCostMeter = 0;
-        int sumOfRate = 0;
+        double sumOfRate = 0;
 
         try {
             List<Review> reviews = getReviewsByRestaurantId(restaurantId);
@@ -174,7 +174,7 @@ public class Model {
 
                 for (Review rev : reviews) {
                     sumOfCostMeter += Integer.parseInt(rev.getCostMeter());
-                    sumOfRate += Integer.parseInt(rev.getRate());
+                    sumOfRate += Double.parseDouble(rev.getRate());
                 }
 
                 return new RestaurantScore(sumOfCostMeter / numberOfReviews, sumOfRate / numberOfReviews);
@@ -192,6 +192,8 @@ public class Model {
     }
 
     public void upsertReview(Review reviewToAdd, GenericEventListenerWithParam<Review> listener) {
+        reviewToAdd.setUserDisplayName(getCurrentUser().getDisplayName());
+
         modelFirebase.upsertReview(reviewToAdd, new GenericEventListenerWithParam<Review>() {
             @Override
             public void onComplete(Review review) {

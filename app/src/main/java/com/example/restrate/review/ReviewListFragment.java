@@ -25,6 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.restrate.Utils.costMeterTextConverter;
+
 public class ReviewListFragment extends Fragment {
     ReviewListViewModel viewModel;
     List<Review> reviewList;
@@ -61,6 +63,15 @@ public class ReviewListFragment extends Fragment {
 
         adapter = new MyAdapter();
         reviewListRV.setAdapter(adapter);
+
+        adapter.setOnClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String id = reviewList.get(position).getReviewId();
+                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToEditReviewFragment direction = RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToEditReviewFragment(id, restaurantId);
+                Navigation.findNavController(view).navigate(direction);
+            }
+        });
 
         viewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
             if (reviews != null) {
@@ -108,16 +119,18 @@ public class ReviewListFragment extends Fragment {
             reviewDescription = itemView.findViewById(R.id.review_listrow_desc);
             reviewRating = itemView.findViewById(R.id.review_listrow_rating);
             reviewCostMeter = itemView.findViewById(R.id.review_listrow_cost_meter);
-        }
 
-        private String costMeterTextConverter(String costMeter) {
-            String costMeterStringified = "";
-
-            for (int i = 0; i < Integer.parseInt(costMeter); i++) {
-                costMeterStringified = costMeterStringified.concat("$");
-            }
-
-            return costMeterStringified;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
 
         private void bindData(Review review, int position) {

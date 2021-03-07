@@ -123,12 +123,13 @@
     <fragment
         android:id="@+id/editReviewFragment"
         android:name="com.example.restrate.review.EditReviewFragment"
-        android:label="fragment_edit_review"
-        tools:layout="@layout/fragment_edit_review" >
+        android:label="@string/edit_review"
+        tools:layout="@layout/fragment_edit_review">
         <argument
             android:name="reviewId"
             app:argType="string" />
-        <argument android:name="restaurantId"
+        <argument
+            android:name="restaurantId"
             app:argType="string" />
     </fragment>
 </navigation>

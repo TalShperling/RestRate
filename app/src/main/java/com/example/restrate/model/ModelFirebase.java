@@ -117,21 +117,19 @@ public class ModelFirebase {
     }
 
     public void updateRestaurantScore(String id, double newRate, int newCostMeter, GenericEventListenerWithNoParam listener) {
-        FirebaseFirestore.getInstance().collection(RESTAURANT_DB_NAME).document(id).update(
-                "rate", String.valueOf(newRate),
-                "costMeter", String.valueOf(newCostMeter)
-        ).addOnSuccessListener(new OnSuccessListener() {
+        getRestaurantById(id, new GenericEventListenerWithParam<Restaurant>() {
             @Override
-            public void onSuccess(Object o) {
-                listener.onComplete();
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
+            public void onComplete(Restaurant restToSave) {
+                restToSave.setRate(String.valueOf(newRate));
+                restToSave.setCostMeter(String.valueOf(newCostMeter));
+                upsertRestaurant(restToSave, new GenericEventListenerWithParam<Restaurant>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error updating restaurant rate", e);
+                    public void onComplete(Restaurant data) {
+                        listener.onComplete();
                     }
                 });
+            }
+        });
     }
 
     public void deleteRestaurant(Restaurant restaurant, GenericEventListenerWithNoParam listener) {

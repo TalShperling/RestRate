@@ -32,6 +32,8 @@ public class EditReviewFragment extends AddReviewFragment {
                 reviewDesc.getEditText().setText(reviewToSave.getDescription());
                 reviewCostMeter.setSelection(Integer.parseInt(reviewToSave.getCostMeter()) - 1);
                 reviewRate.setRating(Float.valueOf(reviewToSave.getRate()));
+
+                pb.setVisibility(View.INVISIBLE);
             }
         });
 

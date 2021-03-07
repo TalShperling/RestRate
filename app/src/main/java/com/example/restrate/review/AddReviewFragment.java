@@ -1,13 +1,10 @@
 package com.example.restrate.review;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.restrate.R;
 import com.example.restrate.Utils;
@@ -26,7 +22,6 @@ import com.example.restrate.model.GenericEventListenerWithParam;
 import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.example.restrate.model.Review;
-import com.example.restrate.restaurant.AddRestaurantFragmentDirections;
 import com.google.android.material.textfield.TextInputLayout;
 import com.squareup.picasso.Picasso;
 
@@ -58,6 +53,8 @@ public class AddReviewFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_review, container, false);
         restaurantId = AddReviewFragmentArgs.fromBundle(getArguments()).getRestaurantId();
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         Model.instance.getRestaurantById(restaurantId, new GenericEventListenerWithParam<Restaurant>() {
             @Override
@@ -115,14 +112,14 @@ public class AddReviewFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (adapterView != null) {
-                    reviewToSave.setCostMeter(adapterView.getItemAtPosition(i).toString());
+                    reviewToSave.setCostMeter(String.valueOf(adapterView.getItemAtPosition(i).toString().length()));
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 if (adapterView != null) {
-                    reviewToSave.setCostMeter(adapterView.getItemAtPosition(0).toString());
+                    reviewToSave.setCostMeter(String.valueOf(adapterView.getItemAtPosition(0).toString().length()));
                 }
             }
         });
@@ -140,17 +137,13 @@ public class AddReviewFragment extends Fragment {
         }
     }
 
-    protected void onSaveRestaurantOnServerSuccess(Review rev) {
-//        AddRestaurantFragmentDirections.ActionAddRestaurantToRestaurantInfo action = AddRestaurantFragmentDirections.actionAddRestaurantToRestaurantInfo(rev.get`());
-//        Navigation.findNavController(view).navigate(action);
-    }
 
     private void saveReviewOnServer(Review reviewToSaveOnServer) {
         Model.instance.upsertReview(reviewToSaveOnServer, new GenericEventListenerWithParam<Review>() {
             @Override
             public void onComplete(Review rev) {
                 pb.setVisibility(View.INVISIBLE);
-                onSaveRestaurantOnServerSuccess(rev);
+                Utils.returnBack(view);
             }
         });
     }
@@ -183,5 +176,11 @@ public class AddReviewFragment extends Fragment {
         if (restaurant.getImageURL() != null) {
             Picasso.get().load(restaurant.getImageURL()).placeholder(R.drawable.restaurant).into(restAvatar);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Utils.hideKeyboard(getActivity());
     }
 }
