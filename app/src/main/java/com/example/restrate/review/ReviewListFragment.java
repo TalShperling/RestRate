@@ -73,6 +73,10 @@ public class ReviewListFragment extends Fragment {
             }
         });
 
+        viewModel.isAddShown().observe(getViewLifecycleOwner(), isShown -> {
+            addReviewBtn.setVisibility(isShown ? View.VISIBLE : View.INVISIBLE);
+        });
+
         return view;
     }
 
