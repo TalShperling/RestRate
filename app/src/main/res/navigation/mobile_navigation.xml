@@ -38,16 +38,6 @@
         <action
             android:id="@+id/action_restaurantInfoFragment_to_editRestaurantFragment"
             app:destination="@id/editRestaurantFragment" />
-        <action
-            android:id="@+id/action_restaurantInfoFragment_to_addReviewFragment"
-            app:destination="@id/addReviewFragment"
-            app:popUpTo="@id/restaurantInfoFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_restaurantInfoFragment_to_editReviewFragment"
-            app:destination="@id/editReviewFragment"
-            app:popUpTo="@id/restaurantInfoFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/editRestaurantFragment"

@@ -52,9 +52,9 @@ public class ReviewListFragment extends Fragment {
         addReviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToAddReviewFragment direction =
-                        RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToAddReviewFragment(viewModel.getRestaurantId());
-                Navigation.findNavController(view).navigate(direction);
+                Bundle bundle = new Bundle();
+                bundle.putString("restaurantId", viewModel.getRestaurantId());
+                Navigation.findNavController(view).navigate(R.id.addReviewFragment, bundle);
             }
         });
 
@@ -70,11 +70,10 @@ public class ReviewListFragment extends Fragment {
                 String reviewId = reviewList.get(position).getReviewId();
                 String restaurantId = reviewList.get(position).getRestaurantId();
 
-                // TODO: add different direction and change to ReviewListFragmentToEditReviewFragment
-                // in that way you will be able to navigate from profile and from restaurant simultaneously
-                RestaurantInfoFragmentDirections.ActionRestaurantInfoFragmentToEditReviewFragment direction =
-                        RestaurantInfoFragmentDirections.actionRestaurantInfoFragmentToEditReviewFragment(reviewId, restaurantId);
-                Navigation.findNavController(view).navigate(direction);
+                Bundle bundle = new Bundle();
+                bundle.putString("restaurantId", restaurantId);
+                bundle.putString("reviewId", reviewId);
+                Navigation.findNavController(view).navigate(R.id.editReviewFragment, bundle);
             }
         });
 
