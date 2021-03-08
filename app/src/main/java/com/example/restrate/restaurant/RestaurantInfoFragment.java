@@ -100,12 +100,13 @@ public class RestaurantInfoFragment extends Fragment {
         Model.instance.getRestaurantById(restaurantId, new GenericEventListenerWithParam<Restaurant>() {
             @Override
             public void onComplete(Restaurant data) {
-                pb.setVisibility(View.INVISIBLE);
                 if (data != null) {
                     restaurant = data;
                     bindData(restaurant);
+                    pb.setVisibility(View.INVISIBLE);
                     reviewListViewModel.selectRestaurant(data.getId());
                 } else {
+                    pb.setVisibility(View.INVISIBLE);
                     cancelLoad();
                 }
             }

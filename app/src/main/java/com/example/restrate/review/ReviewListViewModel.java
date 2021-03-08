@@ -56,4 +56,5 @@ public class ReviewListViewModel extends ViewModel {
     }
 
     public String getRestaurantId() { return restaurantId.getValue(); }
+    public String getUserId() { return userId.getValue(); }
 }
