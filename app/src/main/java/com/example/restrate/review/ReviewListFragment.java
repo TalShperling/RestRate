@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class ReviewListFragment extends Fragment {
     TextView emptyList;
     FloatingActionButton addReviewBtn;
     RecyclerView reviewListRV;
+    ProgressBar reviewListPB;
     MyAdapter adapter;
 
     @Override
@@ -48,8 +50,10 @@ public class ReviewListFragment extends Fragment {
         addReviewBtn = view.findViewById(R.id.review_list_add_btn);
         reviewListRV = view.findViewById(R.id.review_list_recycler_view);
         emptyList = view.findViewById(R.id.review_list_empty);
+        reviewListPB = view.findViewById(R.id.review_list_pb);
 
         reviewListRV.setHasFixedSize(true);
+        reviewListPB.setVisibility(View.VISIBLE);
 
         addReviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,10 +97,12 @@ public class ReviewListFragment extends Fragment {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        reviewListPB.setVisibility(View.VISIBLE);
                         Model.instance.deleteReview(review, new GenericEventListenerWithNoParam() {
                             @Override
                             public void onComplete() {
                                 dialogInterface.dismiss();
+                                reviewListPB.setVisibility(View.INVISIBLE);
                                 Utils.returnBack(view);
                             }
                         });
@@ -128,6 +134,7 @@ public class ReviewListFragment extends Fragment {
                 if (reviews.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
                 }
+                reviewListPB.setVisibility(View.INVISIBLE);
                 adapter.notifyDataSetChanged();
             }
         });
