@@ -36,7 +36,7 @@ public class RestaurantInfoFragment extends Fragment {
     TextView restaurantSiteLink;
     ImageView restaurantImage;
     Restaurant restaurant = new Restaurant();
-    ProgressBar pb;
+    ProgressBar restaurantPB;
     Button backBtn;
     Button editBtn;
     Button deleteBtn;
@@ -65,8 +65,8 @@ public class RestaurantInfoFragment extends Fragment {
         editBtn = view.findViewById(R.id.restinfo_edit);
         deleteBtn = view.findViewById(R.id.restinfo_delete);
 
-        pb = view.findViewById(R.id.restinfo_pb);
-        pb.setVisibility(View.VISIBLE);
+        restaurantPB = view.findViewById(R.id.restinfo_pb);
+        restaurantPB.setVisibility(View.VISIBLE);
 
         final String restaurantId = RestaurantInfoFragmentArgs.fromBundle(getArguments()).getRestaurantId();
 
@@ -103,10 +103,10 @@ public class RestaurantInfoFragment extends Fragment {
                 if (data != null) {
                     restaurant = data;
                     bindData(restaurant);
-                    pb.setVisibility(View.INVISIBLE);
+                    restaurantPB.setVisibility(View.INVISIBLE);
                     reviewListViewModel.selectRestaurant(data.getId());
                 } else {
-                    pb.setVisibility(View.INVISIBLE);
+                    restaurantPB.setVisibility(View.INVISIBLE);
                     cancelLoad();
                 }
             }
@@ -139,10 +139,12 @@ public class RestaurantInfoFragment extends Fragment {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                restaurantPB.setVisibility(View.VISIBLE);
                 Model.instance.deleteRestaurant(restaurant, new GenericEventListenerWithNoParam() {
                     @Override
                     public void onComplete() {
                         dialogInterface.dismiss();
+                        restaurantPB.setVisibility(View.INVISIBLE);
                         Utils.returnBack(view);
                     }
                 });
