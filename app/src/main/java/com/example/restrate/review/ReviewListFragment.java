@@ -129,7 +129,7 @@ public class ReviewListFragment extends Fragment {
                         showAdd = false;
                     }
                 }
-                viewModel.setIsAddShown(showAdd);
+                viewModel.setIsAddShown(showAdd && viewModel.getUserId() == null);
                 emptyList.setVisibility(View.INVISIBLE);
                 if (reviews.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
