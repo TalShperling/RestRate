@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.restrate.R;
 import com.example.restrate.Utils;
@@ -41,6 +42,7 @@ public class RestaurantInfoFragment extends Fragment {
     Button editBtn;
     Button deleteBtn;
     ReviewListViewModel reviewListViewModel;
+    SwipeRefreshLayout sref;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class RestaurantInfoFragment extends Fragment {
         backBtn = view.findViewById(R.id.restinfo_back);
         editBtn = view.findViewById(R.id.restinfo_edit);
         deleteBtn = view.findViewById(R.id.restinfo_delete);
+        sref = view.findViewById(R.id.restinfo_swipe);
 
         restaurantPB = view.findViewById(R.id.restinfo_pb);
         restaurantPB.setVisibility(View.VISIBLE);
@@ -73,6 +76,14 @@ public class RestaurantInfoFragment extends Fragment {
         ReviewListFragment reviewsFragment = new ReviewListFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.restinfo_reviews_container, reviewsFragment).commit();
+
+        sref.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                sref.setRefreshing(true);
+                reloadData();
+            }
+        });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +124,18 @@ public class RestaurantInfoFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void reloadData() {
+        restaurantPB.setVisibility(View.VISIBLE);
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+        Model.instance.refreshAllReviews(() -> {
+            restaurantPB.setVisibility(View.INVISIBLE);
+            editBtn.setEnabled(true);
+            deleteBtn.setEnabled(true);
+            sref.setRefreshing(false);
+        });
     }
 
     private void cancelLoad() {
