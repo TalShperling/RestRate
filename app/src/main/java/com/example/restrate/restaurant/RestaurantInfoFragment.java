@@ -131,6 +131,7 @@ public class RestaurantInfoFragment extends Fragment {
         editBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
         Model.instance.refreshAllReviews(() -> {
+            reviewListViewModel.selectRestaurant(restaurant.getId());
             restaurantPB.setVisibility(View.INVISIBLE);
             editBtn.setEnabled(true);
             deleteBtn.setEnabled(true);
