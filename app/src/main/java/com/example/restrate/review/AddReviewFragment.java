@@ -139,6 +139,7 @@ public class AddReviewFragment extends Fragment {
 
 
     private void saveReviewOnServer(Review reviewToSaveOnServer) {
+        cancelBtn.setEnabled(false);
         Model.instance.upsertReview(reviewToSaveOnServer, new GenericEventListenerWithParam<Review>() {
             @Override
             public void onComplete(Review rev) {

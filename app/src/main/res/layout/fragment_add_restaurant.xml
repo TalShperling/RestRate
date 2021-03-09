@@ -152,6 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Site URL"
+                    android:maxLength="40"
                     android:inputType="textUri"/>
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -156,6 +156,8 @@ public class RestaurantInfoFragment extends Fragment {
     }
 
     private void deleteRestaurant() {
+        editBtn.setEnabled(false);
+        backBtn.setEnabled(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete restaurant");
         builder.setMessage("Are you sure you want to delete this restaurant?");
@@ -178,6 +180,8 @@ public class RestaurantInfoFragment extends Fragment {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                editBtn.setEnabled(true);
+                backBtn.setEnabled(true);
                 dialogInterface.dismiss();
             }
         });

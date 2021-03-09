@@ -175,6 +175,7 @@ public class AddRestaurantFragment extends Fragment {
     }
 
     protected void saveRestaurantOnServer(Restaurant restToSave) {
+        cancelBtn.setEnabled(false);
         pb.setVisibility(View.VISIBLE);
 
         BitmapDrawable drawable = (BitmapDrawable) avatarImageView.getDrawable();
