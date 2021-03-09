@@ -1,133 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/restinfo_swipe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".restaurant.RestaurantInfoFragment">
 
-    <TextView
-        android:id="@+id/restinfo_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/restinfo_description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/restinfo_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/restinfo_image"
-        app:layout_constraintEnd_toStartOf="@+id/restinfo_image"
-        app:layout_constraintStart_toStartOf="@+id/restinfo_name"
-        app:layout_constraintTop_toBottomOf="@+id/restinfo_name" />
-
-    <ImageView
-        android:id="@+id/restinfo_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/restinfo_name"
-        tools:src="@drawable/restaurant" />
-
-    <TextView
-        android:id="@+id/restinfo_address"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/restinfo_image"
-        app:layout_constraintStart_toStartOf="@+id/restinfo_name"
-        app:layout_constraintTop_toBottomOf="@+id/restinfo_description" />
-
-    <TextView
-        android:id="@+id/restinfo_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/restinfo_image"
-        app:layout_constraintTop_toTopOf="@+id/restinfo_siteLink"
-        android:autoLink="phone"
-        android:linksClickable="true"/>
-
-    <TextView
-        android:id="@+id/restinfo_siteLink"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintEnd_toStartOf="@+id/restinfo_phone"
-        app:layout_constraintStart_toStartOf="@+id/restinfo_name"
-        app:layout_constraintTop_toBottomOf="@+id/restinfo_address"
-        android:autoLink="web"
-        android:linksClickable="true"/>
-
-    <Button
-        android:id="@+id/restinfo_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="Back"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/restinfo_edit"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/restinfo_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#4CAF50"
-        android:text="Edit"
-        android:textSize="20sp"
-        app:backgroundTint="#4CAF50"
-        app:layout_constraintBottom_toBottomOf="@+id/restinfo_back"
-        app:layout_constraintEnd_toStartOf="@+id/restinfo_delete"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/restinfo_back" />
-
-    <Button
-        android:id="@+id/restinfo_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        android:textSize="20sp"
-        app:backgroundTint="#FD0000"
-        app:layout_constraintBottom_toBottomOf="@+id/restinfo_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/restinfo_edit" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/restinfo_reviews_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/restinfo_edit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/restinfo_siteLink">
+        android:layout_height="match_parent"
+        tools:context=".restaurant.RestaurantInfoFragment">
 
+        <ProgressBar
+            android:id="@+id/restinfo_pb"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/restinfo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/restinfo_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/restinfo_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/restinfo_image"
+            app:layout_constraintEnd_toStartOf="@+id/restinfo_image"
+            app:layout_constraintStart_toStartOf="@+id/restinfo_name"
+            app:layout_constraintTop_toBottomOf="@+id/restinfo_name" />
+
+        <ImageView
+            android:id="@+id/restinfo_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/restinfo_name"
+            tools:src="@drawable/restaurant" />
+
+        <TextView
+            android:id="@+id/restinfo_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/restinfo_image"
+            app:layout_constraintStart_toStartOf="@+id/restinfo_name"
+            app:layout_constraintTop_toBottomOf="@+id/restinfo_description" />
+
+        <TextView
+            android:id="@+id/restinfo_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="phone"
+            android:linksClickable="true"
+            app:layout_constraintEnd_toEndOf="@+id/restinfo_image"
+            app:layout_constraintTop_toTopOf="@+id/restinfo_siteLink" />
+
+        <TextView
+            android:id="@+id/restinfo_siteLink"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            android:autoLink="web"
+            android:linksClickable="true"
+            app:layout_constraintEnd_toStartOf="@+id/restinfo_phone"
+            app:layout_constraintStart_toStartOf="@+id/restinfo_name"
+            app:layout_constraintTop_toBottomOf="@+id/restinfo_address" />
+
+        <Button
+            android:id="@+id/restinfo_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:text="Back"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/restinfo_edit"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/restinfo_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4CAF50"
+            android:text="Edit"
+            android:textSize="20sp"
+            app:backgroundTint="#4CAF50"
+            app:layout_constraintBottom_toBottomOf="@+id/restinfo_back"
+            app:layout_constraintEnd_toStartOf="@+id/restinfo_delete"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/restinfo_back" />
+
+        <Button
+            android:id="@+id/restinfo_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:textSize="20sp"
+            app:backgroundTint="#FD0000"
+            app:layout_constraintBottom_toBottomOf="@+id/restinfo_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/restinfo_edit" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/restinfo_reviews_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/restinfo_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/restinfo_siteLink">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ProgressBar
-        android:id="@+id/restinfo_pb"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
