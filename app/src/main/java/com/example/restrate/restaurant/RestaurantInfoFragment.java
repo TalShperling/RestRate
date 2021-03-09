@@ -26,6 +26,7 @@ import com.example.restrate.model.Model;
 import com.example.restrate.model.Restaurant;
 import com.example.restrate.review.ReviewListFragment;
 import com.example.restrate.review.ReviewListViewModel;
+import com.example.restrate.review.ReviewListViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 public class RestaurantInfoFragment extends Fragment {
@@ -47,8 +48,7 @@ public class RestaurantInfoFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        reviewListViewModel = new ViewModelProvider(this).get(ReviewListViewModel.class);
-        reviewListViewModel.init();
+        reviewListViewModel = new ViewModelProvider(this, new ReviewListViewModelFactory()).get(ReviewListViewModel.class);
     }
 
     @Override
