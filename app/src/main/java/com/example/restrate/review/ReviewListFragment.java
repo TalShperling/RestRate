@@ -55,6 +55,8 @@ public class ReviewListFragment extends Fragment {
         reviewListRV.setHasFixedSize(true);
         reviewListPB.setVisibility(View.VISIBLE);
 
+        addReviewBtn.setEnabled(false);
+
         addReviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,6 +124,7 @@ public class ReviewListFragment extends Fragment {
 
         viewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
             if (reviews != null) {
+                addReviewBtn.setEnabled(true);
                 reviewList = reviews;
                 boolean showAdd = true;
                 for (Review review : reviews) {
